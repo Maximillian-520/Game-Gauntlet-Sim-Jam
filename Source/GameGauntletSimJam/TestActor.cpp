@@ -17,6 +17,7 @@ void ATestActor::BeginPlay()
 	Super::BeginPlay();
 	
 	UE_LOG(LogTemp, Warning, TEXT("DebugPrint"));
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *TestVector.ToString());
 }
 
 // Called every frame

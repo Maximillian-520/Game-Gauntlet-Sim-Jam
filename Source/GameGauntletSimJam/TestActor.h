@@ -15,6 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	ATestActor();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	float TestVar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	FVector TestVector;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
