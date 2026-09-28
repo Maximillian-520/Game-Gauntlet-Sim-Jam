@@ -38,6 +38,13 @@ public:
 	//           Move To Point
 	// ==================================================
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MoveToPoint")
+	FVector FinalTargetlocation = FVector::ZeroVector;
+
+	/** How close (in cm) is "close enough" to consider the point reached. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveToPoint")
+	float AcceptanceRadius = 10.f;
+
 	/** Computes a NavMesh path to TargetLocation, then follows it waypoint by waypoint. */
 	UFUNCTION(BlueprintCallable, Category = "MoveToPoint")
 	virtual void MoveToPoint(const FVector& TargetLocation);
@@ -48,10 +55,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MoveToPoint")
 	bool IsMovingToPoint() const { return bIsMovingToPoint; }
-
-	/** How close (in cm) is "close enough" to consider the point reached. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveToPoint")
-	float AcceptanceRadius = 10.f;
 
 	/** Broadcast when the owner arrives within AcceptanceRadius of the target. */
 	UPROPERTY(BlueprintAssignable, Category = "MoveToPoint")
@@ -68,7 +71,6 @@ protected:
 	void GoToNextWaypoint();
 
 protected:
-	FVector FinalTargetlocation = FVector::ZeroVector;
 	FVector CurrentTargetlocation = FVector::ZeroVector;
 	TArray<FVector> CurrentPath;
 	int32 CurrentPathIndex = INDEX_NONE;

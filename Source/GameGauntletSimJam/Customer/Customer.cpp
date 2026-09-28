@@ -3,7 +3,9 @@
 ACustomer::ACustomer()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 	NavigationMovementComponent = CreateDefaultSubobject<UNavigationMovementComponent>(TEXT("Navigation Movement"));
+	CustomerBehaviorComponent = CreateDefaultSubobject<UCustomerBehaviorComponent>(TEXT("Customer Behavior"));
 }
 
 void ACustomer::BeginPlay()
@@ -21,8 +23,13 @@ void ACustomer::Tick(float DeltaTime)
 
 }
 
-void ACustomer::GoToExit()
+void ACustomer::SeeShop(AShop* Shop)
 {
-	NavigationMovementComponent->MoveToPoint(ExitLocation);
+	const float Chance = 0.3f;
+	if (FMath::FRand() < Chance) CustomerBehaviorComponent->GoToShop(Shop);
 }
 
+void ACustomer::GoToExit()
+{
+	CustomerBehaviorComponent->ChangeState(EBehaviorState::Exiting);
+}

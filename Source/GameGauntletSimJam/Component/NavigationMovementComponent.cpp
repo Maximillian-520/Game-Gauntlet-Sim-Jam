@@ -60,10 +60,6 @@ void UNavigationMovementComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UNavigationMovementComponent::MoveToPoint(const FVector& TargetLocation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MoveToPoint called. HasBegunPlay: %d, Owner: %s"),
-		HasBegunPlay(),
-		GetOwner() ? *GetOwner()->GetName() : TEXT("NULL"));
-
 	FinalTargetlocation = TargetLocation;
 	bIsMovingToPoint = true;
 	RequestPath(TargetLocation);
