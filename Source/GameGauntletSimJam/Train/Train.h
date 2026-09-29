@@ -5,10 +5,6 @@
 #include "../Component/LinearMovementComponent.h"
 #include "Train.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDisembarkLocationReached);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDisappearLocationReached);
-
 UCLASS()
 
 class GAMEGAUNTLETSIMJAM_API ATrain : public AActor
@@ -21,29 +17,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	ULinearMovementComponent* LinearMovementComponent;
 
-	UFUNCTION(BlueprintCallable, Category = "Train")
-	void GoToDisembarkLocation(const FVector& DisembarkLocation);
+	/** How close (in cm) is "close enough" to consider the point reached. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Train")
+	float AcceptanceRadius = 10.f;
 
 	UFUNCTION(BlueprintCallable, Category = "Train")
-	void GoToDisappearLocation(const FVector& DisappearLocation);
-
-	UFUNCTION(BlueprintCallable, Category = "Events")
-	void HandlePointReached();
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnDisembarkLocationReached OnDisembarkLocationReached;
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnDisappearLocationReached OnDisappearLocationReached;
+	void GoToLocation(FVector NewTargetLocation);
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
-public:	
-	FVector CurrentTargetLocation;
-	bool bGoingToDisembarkLocation = false;
-	bool bGoingToDisappearLocation = false;
+	void HandlePointReached();
+
+public:
+	bool bIsMoving = false;
+	FVector TargetLocation;
 
 };

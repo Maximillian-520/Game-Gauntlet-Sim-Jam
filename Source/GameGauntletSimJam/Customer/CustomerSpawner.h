@@ -2,7 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Engine/TargetPoint.h"
+#include "Engine/TriggerBox.h"
+#include "Components/BoxComponent.h"
 #include "Customer.h"
 #include "CustomerSpawner.generated.h"
 
@@ -22,20 +23,32 @@ public:
 	TSubclassOf<ACustomer> CustomerBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Spawner")
-	TArray<ATargetPoint*> SpawnPoints;
+	TArray<ATriggerBox*> SpawnAreas;
+
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void StartSpawning();
+
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void StopSpawning();
 
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnCustomer();
-
-	UFUNCTION(BlueprintCallable, Category = "Spawner")
-	void SpawnCustomerAtInterval(int Amount, float DelayInterval);
 	
 	// ==================================================
-	//           Customer
+	//           Settings
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Customer")
-	ATargetPoint* ExitPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	bool bStartSpawningImmediately = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings")
+	bool bIsSpawning = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	float MinSpawnInterval = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	float MaxSpawnInterval = 2.0f;
 
 protected:
 	virtual void BeginPlay() override;
@@ -43,10 +56,9 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	// Spawn at interval
-	bool bSpawnAtIntervalActive;
-	FTimerHandle SpawnAtIntervalTimerHandle;
-	int SpawnAtIntervalTargetAmount;
-	int SpawnAtIntervalCurrentAmount;
+	float SpawnTimer;
 
+	void ResetSpawnTimer();
+
+	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
 };
