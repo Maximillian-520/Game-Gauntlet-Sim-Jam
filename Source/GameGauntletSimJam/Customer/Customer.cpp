@@ -12,6 +12,8 @@ void ACustomer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CustomerBehaviorComponent->OnShoppingFinished.AddDynamic(this, &ACustomer::HandleShoppingFinished);
+
 	GetWorld()->GetTimerManager().SetTimerForNextTick(
 		this, &ACustomer::GoToExit
 	);
@@ -25,11 +27,15 @@ void ACustomer::Tick(float DeltaTime)
 
 void ACustomer::SeeShop(AShop* Shop)
 {
-	const float Chance = 0.3f;
-	if (FMath::FRand() < Chance) CustomerBehaviorComponent->GoToShop(Shop);
+	if (FMath::FRand() < InterestedChance) CustomerBehaviorComponent->GoToShop(Shop);
 }
 
 void ACustomer::GoToExit()
 {
 	CustomerBehaviorComponent->ChangeState(EBehaviorState::Exiting);
+}
+
+void ACustomer::HandleShoppingFinished(AShop* Shop)
+{
+	if (FMath::FRand() < PurchaseChance) OnPurchasedFromShop.Broadcast(Shop->ItemCost);
 }

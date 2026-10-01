@@ -16,6 +16,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Shop")
 	FVector GetStandingLocation();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
+	int32 ItemCost = 1;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

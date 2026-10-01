@@ -91,7 +91,11 @@ void ACustomerSpawner::SpawnCustomer()
 
         ACustomer* CustomerInstance = World->SpawnActor<ACustomer>(CustomerBlueprint, SpawnLocation, SpawnRotation, SpawnParams);
 
-        if (CustomerInstance) CustomerInstance->SetExitLocation(ExitLocation);
+        if (CustomerInstance)
+        {
+            CustomerInstance->SetExitLocation(ExitLocation);
+            OnCustomerSpawned.Broadcast(CustomerInstance);
+        }
     }
 }
 

@@ -7,6 +7,8 @@
 #include "Customer.h"
 #include "CustomerSpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCustomerSpawned, ACustomer*, Customer);
+
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API ACustomerSpawner : public AActor
 {
@@ -33,6 +35,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnCustomer();
+
+	UPROPERTY(BlueprintAssignable, Category = "Spawner")
+	FOnCustomerSpawned OnCustomerSpawned;
 	
 	// ==================================================
 	//           Settings

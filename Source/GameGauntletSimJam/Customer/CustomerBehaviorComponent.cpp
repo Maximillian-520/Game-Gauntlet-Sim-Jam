@@ -35,19 +35,12 @@ void UCustomerBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	UpdateState();
+	UpdateState(DeltaTime);
 }
 
 // ==================================================
 //           State
 // ==================================================
-
-void UCustomerBehaviorComponent::GoToShop(AShop* Shop)
-{
-	TargetShop = Shop;
-
-	ChangeState(EBehaviorState::Shopping);
-}
 
 void UCustomerBehaviorComponent::ChangeState(EBehaviorState NewState)
 {
@@ -73,7 +66,12 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 			break;
 
 		case EBehaviorState::Shopping:
-			if (TargetShop) NavMovement->MoveToPoint(TargetShop->GetStandingLocation());
+			if (TargetShop)
+			{
+				NavMovement->MoveToPoint(TargetShop->GetStandingLocation());
+				bHasReachedShop = false;
+				ShopPeekTimer = FMath::FRandRange(MinPeekingDuration, MaxPeekingDuration);
+			}
 			else ChangeState(EBehaviorState::Exiting);
 			break;
 
@@ -95,6 +93,7 @@ void UCustomerBehaviorComponent::ExitState(EBehaviorState ExitState)
 			break;
 
 		case EBehaviorState::Shopping:
+			OnShoppingFinished.Broadcast(TargetShop);
 			break;
 
 		case EBehaviorState::Disabled:
@@ -106,7 +105,7 @@ void UCustomerBehaviorComponent::ExitState(EBehaviorState ExitState)
 	}
 }
 
-void UCustomerBehaviorComponent::UpdateState()
+void UCustomerBehaviorComponent::UpdateState(float DeltaTime)
 {
 	if (!NavMovement) return;
 
@@ -116,11 +115,27 @@ void UCustomerBehaviorComponent::UpdateState()
 			break;
 
 		case EBehaviorState::Shopping:
+			if (bHasReachedShop)
+			{
+				ShopPeekTimer -= DeltaTime;
+				if (ShopPeekTimer <= 0) ChangeState(EBehaviorState::Exiting);
+			}
 			break;
 
 		default:
 			break;
 	}
+}
+
+// ==================================================
+//           Shopping
+// ==================================================
+
+void UCustomerBehaviorComponent::GoToShop(AShop* Shop)
+{
+	TargetShop = Shop;
+
+	ChangeState(EBehaviorState::Shopping);
 }
 
 // ==================================================
@@ -137,8 +152,8 @@ void UCustomerBehaviorComponent::HandlePointReached()
 			break;
 
 		case EBehaviorState::Shopping:
-			// Arrived at the shop; finished shopping, head out.
-			ChangeState(EBehaviorState::Exiting);
+			// Arrived at the shop.
+			bHasReachedShop = true;
 			break;
 
 		default:

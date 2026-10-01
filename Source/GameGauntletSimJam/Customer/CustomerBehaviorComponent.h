@@ -15,6 +15,8 @@ enum class EBehaviorState : uint8
 	Disabled    UMETA(Hidden)
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShoppingFinished, AShop*, Shop);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAMEGAUNTLETSIMJAM_API UCustomerBehaviorComponent : public UActorComponent
 {
@@ -46,8 +48,17 @@ public:
 	//           Shopping
 	// ==================================================
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shopping")
+	float MinPeekingDuration = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shopping")
+	float MaxPeekingDuration = 3.0f;
+
 	UFUNCTION(BlueprintCallable, Category = "Shopping")
 	void GoToShop(AShop* Shop);
+
+	UPROPERTY(BlueprintAssignable, Category = "Shopping")
+	FOnShoppingFinished OnShoppingFinished;
 
 protected:
 	virtual void BeginPlay() override;
@@ -61,7 +72,7 @@ protected:
 
 	void ExitState(EBehaviorState ExitState);
 
-	void UpdateState();
+	void UpdateState(float DeltaTime);
 
 	// ==================================================
 	//           Event
@@ -76,5 +87,7 @@ private:
 	
 	// Shopping
 	TObjectPtr<AShop> TargetShop;
+	bool bHasReachedShop = false;
+	float ShopPeekTimer;
 
 };
