@@ -10,8 +10,9 @@ UENUM(BlueprintType)
 enum class EBehaviorState : uint8
 {
 	Idle        UMETA(DisplayName = "Idle"),
-	Exiting      UMETA(DisplayName = "Exiting"),
-	Shopping     UMETA(DisplayName = "Shopping"),
+	Strolling   UMETA(DisplayName = "Strolling"),
+	Shopping	UMETA(DisplayName = "Shopping"),
+	MakingWay	UMETA(DisplayName = "MakingWay"),
 	Disabled    UMETA(Hidden)
 };
 
@@ -32,17 +33,17 @@ public:
 	//           State
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 	EBehaviorState State = EBehaviorState::Idle;
 
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void ChangeState(EBehaviorState NewState);
 
 	// ==================================================
-	//           Exiting
+	//           Strolling
 	// ==================================================
 
-	void SetExitLocation(const FVector& NewExitLocation) { ExitLocation = NewExitLocation; }
+	void SetExit(AActor* NewExitActor, const FVector& NewExitLocation);
 
 	// ==================================================
 	//           Shopping
@@ -59,6 +60,19 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Shopping")
 	FOnShoppingFinished OnShoppingFinished;
+
+	// ==================================================
+	//           Making Way
+	// ==================================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Making Way")
+	float MinPatienceDuration = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Making Way")
+	float MaxPatienceDuration = 15.0f;
+
+	UFUNCTION(BlueprintCallable, Category = "Making Way")
+	void DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation);
 
 protected:
 	virtual void BeginPlay() override;
@@ -82,12 +96,19 @@ protected:
 	void HandlePointReached();
 
 private:
-	// Exiting
+	// Strolling
+	AActor* ExitActor;
 	FVector ExitLocation;
 	
 	// Shopping
 	TObjectPtr<AShop> TargetShop;
 	bool bHasReachedShop = false;
 	float ShopPeekTimer;
+
+	// Making Way
+	AActor* MakeWayActor;
+	FVector MakeWayLocation;
+	bool bHasMadeWay = false;
+	float MakeWayPatienceTimer;
 
 };

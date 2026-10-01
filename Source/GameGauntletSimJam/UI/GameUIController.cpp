@@ -11,23 +11,38 @@ void AGameUIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+    APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+
     if (MoneyUIBlueprint)
     {
-        APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
         if (PC)
         {
-            MoneyUIWidget = CreateWidget<UMoneyUI>(PC, MoneyUIBlueprint);
-            if (MoneyUIWidget) MoneyUIWidget->AddToViewport();
+            MoneyUI = CreateWidget<UMoneyUI>(PC, MoneyUIBlueprint);
+            if (MoneyUI) MoneyUI->AddToViewport();
+        }
+    }
+
+    if (CustomerControlUIBlueprint)
+    {
+        if (PC)
+        {
+            CustomerControlUI = CreateWidget<UCustomerControlUI>(PC, CustomerControlUIBlueprint);
+            if (CustomerControlUI) CustomerControlUI->AddToViewport();
         }
     }
 }
 
 void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    if (MoneyUIWidget)
+    if (MoneyUI)
     {
-        MoneyUIWidget->RemoveFromParent();
-        MoneyUIWidget = nullptr;
+        MoneyUI->RemoveFromParent();
+        MoneyUI = nullptr;
+    }
+    if (CustomerControlUI)
+    {
+        CustomerControlUI->RemoveFromParent();
+        CustomerControlUI = nullptr;
     }
     Super::EndPlay(EndPlayReason);
 }

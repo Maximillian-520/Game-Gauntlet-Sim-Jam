@@ -11,7 +11,8 @@ public class GameGauntletSimJam : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core", "CoreUObject", "Engine", "InputCore",
 			"EnhancedInput", "NavigationSystem",
-			"UMG", "Slate", "SlateCore"
+			"UMG", "Slate", "SlateCore",
+            "ModelViewViewModel", "FieldNotification"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

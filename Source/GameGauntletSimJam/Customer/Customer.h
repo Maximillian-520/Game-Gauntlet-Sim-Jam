@@ -39,10 +39,16 @@ public:
 	float PurchaseChance = 0.5f;
 
 	UFUNCTION(BlueprintCallable, Category = "Customer")
+	void StrollAround();
+
+	UFUNCTION(BlueprintCallable, Category = "Customer")
 	void SeeShop(AShop* Shop);
 
 	UFUNCTION(BlueprintCallable, Category = "Customer")
-	void SetExitLocation(const FVector& NewExitLocation) { CustomerBehaviorComponent->SetExitLocation(NewExitLocation); }
+	void MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation);
+	
+	UFUNCTION(BlueprintCallable, Category = "Customer")
+	void SetExit(AActor* NewExitActor, const FVector& NewExitLocation);
 
 	UPROPERTY(BlueprintAssignable, Category = "Customer")
 	FOnPurchasedFromShop OnPurchasedFromShop;
@@ -56,8 +62,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
-	void GoToExit();
 
 private:
 	FVector ExitLocation;

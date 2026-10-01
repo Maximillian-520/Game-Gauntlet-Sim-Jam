@@ -9,20 +9,14 @@ void UMoneyUI::NativeConstruct()
     Super::NativeConstruct();
 
     MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance());
-    if (!MoneyManager)
-    {
-        return;
-    }
+    if (!MoneyManager) return;
 
     MoneyManager->OnMoneyChanged.AddDynamic(this, &UMoneyUI::HandleMoneyChanged);
 
     // Show the current value immediately
     UpdateMoneyText(MoneyManager->GetMoney());
 
-    if (DeltaText)
-    {
-        DeltaText->SetVisibility(ESlateVisibility::Collapsed);
-    }
+    if (DeltaText) DeltaText->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMoneyUI::NativeDestruct()

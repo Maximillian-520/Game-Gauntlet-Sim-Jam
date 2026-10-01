@@ -36,6 +36,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnCustomer();
 
+	UBoxComponent* GetNearestSpawnArea(const FVector CurrentLocation);
+
+	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Spawner")
 	FOnCustomerSpawned OnCustomerSpawned;
 	
@@ -65,5 +69,4 @@ private:
 
 	void ResetSpawnTimer();
 
-	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
 };

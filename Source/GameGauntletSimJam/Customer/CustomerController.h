@@ -18,6 +18,12 @@ public:
 	ACustomerSpawner* CustomerSpawner;
 
 	UFUNCTION(BlueprintCallable, Category = "Controller")
+	void StartMakingWay();
+
+	UFUNCTION(BlueprintCallable, Category = "Controller")
+	void EndMakingWay();
+
+	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void HandleCustomerSpawned(ACustomer* Customer);
 
 	UFUNCTION(BlueprintCallable, Category = "Controller")

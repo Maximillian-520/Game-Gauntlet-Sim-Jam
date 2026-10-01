@@ -15,7 +15,7 @@ void ACustomer::BeginPlay()
 	CustomerBehaviorComponent->OnShoppingFinished.AddDynamic(this, &ACustomer::HandleShoppingFinished);
 
 	GetWorld()->GetTimerManager().SetTimerForNextTick(
-		this, &ACustomer::GoToExit
+		this, &ACustomer::StrollAround
 	);
 }
 
@@ -25,14 +25,24 @@ void ACustomer::Tick(float DeltaTime)
 
 }
 
+void ACustomer::StrollAround()
+{
+	CustomerBehaviorComponent->ChangeState(EBehaviorState::Strolling);
+}
+
 void ACustomer::SeeShop(AShop* Shop)
 {
 	if (FMath::FRand() < InterestedChance) CustomerBehaviorComponent->GoToShop(Shop);
 }
 
-void ACustomer::GoToExit()
+void ACustomer::MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation)
 {
-	CustomerBehaviorComponent->ChangeState(EBehaviorState::Exiting);
+	CustomerBehaviorComponent->DoMakeWay(NewMakeWayActor, MakeWayLocation);
+}
+
+void ACustomer::SetExit(AActor* NewExitActor, const FVector& NewExitLocation)
+{
+	CustomerBehaviorComponent->SetExit(NewExitActor, NewExitLocation);
 }
 
 void ACustomer::HandleShoppingFinished(AShop* Shop)

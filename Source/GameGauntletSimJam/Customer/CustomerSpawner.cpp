@@ -29,6 +29,10 @@ void ACustomerSpawner::Tick(float DeltaTime)
     }
 }
 
+// ==================================================
+//           Spawner
+// ==================================================
+
 void ACustomerSpawner::StartSpawning()
 {
     bIsSpawning = true;
@@ -64,6 +68,7 @@ void ACustomerSpawner::SpawnCustomer()
             }
         }
 
+        AActor* ExitActor = this;
         FVector ExitLocation = GetActorLocation();
 
         // --- Pick a random exit from any other spawn area ---
@@ -93,18 +98,42 @@ void ACustomerSpawner::SpawnCustomer()
 
         if (CustomerInstance)
         {
-            CustomerInstance->SetExitLocation(ExitLocation);
+            CustomerInstance->SetExit(ExitActor, ExitLocation);
             OnCustomerSpawned.Broadcast(CustomerInstance);
         }
     }
 }
 
-void ACustomerSpawner::ResetSpawnTimer()
+UBoxComponent* ACustomerSpawner::GetNearestSpawnArea(const FVector CurrentLocation)
 {
-    const float MinInterval = FMath::Max(0.0f, FMath::Min(MinSpawnInterval, MaxSpawnInterval));
-    const float MaxInterval = FMath::Max(MinSpawnInterval, MaxSpawnInterval);
+    UBoxComponent* NearestBox = nullptr;
+    float NearestDistSq = TNumericLimits<float>::Max();
 
-    SpawnTimer = FMath::FRandRange(MinInterval, MaxInterval);
+    for (ATriggerBox* Area : SpawnAreas)
+    {
+        if (!Area) continue;
+
+        UBoxComponent* Box = Cast<UBoxComponent>(Area->GetCollisionComponent());
+        if (!Box) continue;
+
+        // Squared distance to the box surface (0 if the location is inside it)
+        float DistSq = 0.f;
+        FVector ClosestPoint;
+
+        if (!Box->GetSquaredDistanceToCollision(CurrentLocation, DistSq, ClosestPoint))
+        {
+            // No valid collision on the component, fall back to center distance
+            DistSq = FVector::DistSquared(CurrentLocation, Box->GetComponentLocation());
+        }
+
+        if (DistSq < NearestDistSq)
+        {
+            NearestDistSq = DistSq;
+            NearestBox = Box;
+        }
+    }
+
+    return NearestBox;
 }
 
 FVector ACustomerSpawner::GetRandomPointInArea(const UBoxComponent* Area) const
@@ -121,4 +150,12 @@ FVector ACustomerSpawner::GetRandomPointInArea(const UBoxComponent* Area) const
 
     // Converts to world space, respecting the component's location, rotation and scale
     return Area->GetComponentTransform().TransformPosition(LocalPoint);
+}
+
+void ACustomerSpawner::ResetSpawnTimer()
+{
+    const float MinInterval = FMath::Max(0.0f, FMath::Min(MinSpawnInterval, MaxSpawnInterval));
+    const float MaxInterval = FMath::Max(MinSpawnInterval, MaxSpawnInterval);
+
+    SpawnTimer = FMath::FRandRange(MinInterval, MaxInterval);
 }

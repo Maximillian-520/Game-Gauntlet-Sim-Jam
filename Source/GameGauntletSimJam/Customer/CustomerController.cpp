@@ -19,6 +19,31 @@ void ACustomerController::Tick(float DeltaTime)
 
 }
 
+void ACustomerController::StartMakingWay()
+{
+    for (ACustomer* Customer : Customers)
+    {
+        if (!Customer) continue;
+
+        UBoxComponent* SpawnArea = CustomerSpawner->GetNearestSpawnArea(Customer->GetActorLocation());
+        if (SpawnArea) Customer->MakeWay(SpawnArea->GetOwner(), CustomerSpawner->GetRandomPointInArea(SpawnArea));
+    }
+
+	CustomerSpawner->StopSpawning();
+}
+
+void ACustomerController::EndMakingWay()
+{
+	for (ACustomer* Customer : Customers)
+	{
+		if (!Customer) continue;
+
+		Customer->StrollAround();
+	}
+
+	CustomerSpawner->StartSpawning();
+}
+
 void ACustomerController::HandleCustomerSpawned(ACustomer* Customer)
 {
 	Customer->OnPurchasedFromShop.AddDynamic(this, &ACustomerController::HandlePurchasedFromShop);

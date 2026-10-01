@@ -61,7 +61,7 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 			NavMovement->StopMovingToPoint();
 			break;
 
-		case EBehaviorState::Exiting:
+		case EBehaviorState::Strolling:
 			NavMovement->MoveToPoint(ExitLocation);
 			break;
 
@@ -72,7 +72,13 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 				bHasReachedShop = false;
 				ShopPeekTimer = FMath::FRandRange(MinPeekingDuration, MaxPeekingDuration);
 			}
-			else ChangeState(EBehaviorState::Exiting);
+			else ChangeState(EBehaviorState::Strolling);
+			break;
+
+		case EBehaviorState::MakingWay:
+			NavMovement->MoveToPoint(MakeWayLocation);
+			bHasMadeWay = false;
+			MakeWayPatienceTimer = FMath::FRandRange(MinPatienceDuration, MaxPatienceDuration);
 			break;
 
 		case EBehaviorState::Disabled:
@@ -88,7 +94,7 @@ void UCustomerBehaviorComponent::ExitState(EBehaviorState ExitState)
 
 	switch (ExitState)
 	{
-		case EBehaviorState::Exiting:
+		case EBehaviorState::Strolling:
 			NavMovement->StopMovingToPoint();
 			break;
 
@@ -111,20 +117,39 @@ void UCustomerBehaviorComponent::UpdateState(float DeltaTime)
 
 	switch (State)
 	{
-		case EBehaviorState::Exiting:
+		case EBehaviorState::Strolling:
 			break;
 
 		case EBehaviorState::Shopping:
 			if (bHasReachedShop)
 			{
 				ShopPeekTimer -= DeltaTime;
-				if (ShopPeekTimer <= 0) ChangeState(EBehaviorState::Exiting);
+				if (ShopPeekTimer <= 0) ChangeState(EBehaviorState::Strolling);
+			}
+			break;
+
+		case EBehaviorState::MakingWay:
+			if (bHasMadeWay)
+			{
+				MakeWayPatienceTimer -= DeltaTime;
+				if (MakeWayPatienceTimer <= 0)
+					if (AActor* Owner = GetOwner()) Owner->Destroy();
 			}
 			break;
 
 		default:
 			break;
 	}
+}
+
+// ==================================================
+//           Strolling
+// ==================================================
+
+void UCustomerBehaviorComponent::SetExit(AActor* NewExitActor, const FVector& NewExitLocation)
+{
+	ExitActor = NewExitActor;
+	ExitLocation = NewExitLocation;
 }
 
 // ==================================================
@@ -139,6 +164,18 @@ void UCustomerBehaviorComponent::GoToShop(AShop* Shop)
 }
 
 // ==================================================
+//           Making Way
+// ==================================================
+
+void UCustomerBehaviorComponent::DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation)
+{
+	MakeWayActor = NewMakeWayActor;
+	MakeWayLocation = NewMakeWayLocation;
+
+	ChangeState(EBehaviorState::MakingWay);
+}
+
+// ==================================================
 //           Event
 // ==================================================
 
@@ -146,7 +183,7 @@ void UCustomerBehaviorComponent::HandlePointReached()
 {
 	switch (State)
 	{
-		case EBehaviorState::Exiting:
+		case EBehaviorState::Strolling:
 			// Reached the exit, customer is done.
 			if (AActor* Owner = GetOwner()) Owner->Destroy();
 			break;
@@ -154,6 +191,13 @@ void UCustomerBehaviorComponent::HandlePointReached()
 		case EBehaviorState::Shopping:
 			// Arrived at the shop.
 			bHasReachedShop = true;
+			break;
+
+		case EBehaviorState::MakingWay:
+			// Reached the exit while making way.
+			bHasMadeWay = true;
+			if (ExitActor == MakeWayActor)
+				if (AActor* Owner = GetOwner()) Owner->Destroy();
 			break;
 
 		default:
