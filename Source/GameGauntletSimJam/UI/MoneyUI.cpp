@@ -1,8 +1,4 @@
 #include "MoneyUI.h"
-#include "Components/TextBlock.h"
-#include "Engine/GameInstance.h"
-#include "TimerManager.h"
-#include "../Common/MoneyManager.h"
 
 void UMoneyUI::NativeConstruct()
 {

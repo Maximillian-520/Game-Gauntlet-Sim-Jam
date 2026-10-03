@@ -2,10 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
-#include "../Customer/CustomerController.h"
+#include "../../Customer/CustomerController.h"
 #include "CustomerViewModel.generated.h"
-
-class ACustomerController;
 
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API UCustomerViewModel : public UMVVMViewModelBase

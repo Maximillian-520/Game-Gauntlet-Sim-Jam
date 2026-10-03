@@ -75,7 +75,11 @@ void ATrainSpawner::SpawnTrain()
 
         ATrain* TrainInstance = World->SpawnActor<ATrain>(TrainBlueprint, SpawnLocation, SpawnRotation, SpawnParams);
 
-        if (TrainInstance) TrainInstance->GoToLocation(TargetLocation);
+        if (TrainInstance) 
+        {
+            TrainInstance->SetPassTargetLocation(TargetLocation);
+            OnTrainSpawned.Broadcast(TrainInstance);
+        }
     }
 }
 

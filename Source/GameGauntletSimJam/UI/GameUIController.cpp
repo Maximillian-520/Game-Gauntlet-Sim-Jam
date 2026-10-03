@@ -30,6 +30,15 @@ void AGameUIController::BeginPlay()
             if (CustomerControlUI) CustomerControlUI->AddToViewport();
         }
     }
+
+    if (TrainControlUIBlueprint)
+    {
+        if (PC)
+        {
+            TrainControlUI = CreateWidget<UTrainControlUI>(PC, TrainControlUIBlueprint);
+            if (TrainControlUI) TrainControlUI->AddToViewport();
+        }
+    }
 }
 
 void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -44,6 +53,12 @@ void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
         CustomerControlUI->RemoveFromParent();
         CustomerControlUI = nullptr;
     }
+    if (TrainControlUI)
+    {
+        TrainControlUI->RemoveFromParent();
+        TrainControlUI = nullptr;
+    }
+
     Super::EndPlay(EndPlayReason);
 }
 

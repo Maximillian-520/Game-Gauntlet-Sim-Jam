@@ -6,6 +6,8 @@
 #include "Train.h"
 #include "TrainSpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrainSpawned, ATrain*, Train);
+
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API ATrainSpawner : public AActor
 {
@@ -35,6 +37,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnTrain();
+
+	UPROPERTY(BlueprintAssignable, Category = "Spawner")
+	FOnTrainSpawned OnTrainSpawned;
 
 	// ==================================================
 	//           Settings

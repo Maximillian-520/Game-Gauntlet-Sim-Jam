@@ -2,6 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
+#include "Engine/GameInstance.h"
+#include "TimerManager.h"
+#include "../Common/Manager/MoneyManager.h"
 #include "MoneyUI.generated.h"
 
 class UTextBlock;
@@ -17,11 +21,9 @@ protected:
 
     virtual void NativeDestruct() override;
 
-    // Must exist in the Widget Blueprint with exactly this name
     UPROPERTY(meta = (BindWidget))
     UTextBlock* MoneyText;
 
-    // Optional: shows "+50" / "-20" briefly after a change
     UPROPERTY(meta = (BindWidgetOptional))
     UTextBlock* DeltaText;
 

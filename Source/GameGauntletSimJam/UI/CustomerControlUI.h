@@ -7,7 +7,7 @@
 #include "MVVMSubsystem.h"
 #include "View/MVVMView.h"
 #include "../Customer/CustomerController.h"
-#include "../ViewModel/CustomerViewModel.h"
+#include "../Common/ViewModel/CustomerViewModel.h"
 #include "CustomerControlUI.generated.h"
 
 class UButton;
@@ -29,12 +29,13 @@ protected:
 	TObjectPtr<UButton> EndButton;
 
 private:
+	UPROPERTY()
+	TObjectPtr<UCustomerViewModel> ViewModel;
+
 	UFUNCTION()
 	void OnStartClicked();
 
 	UFUNCTION()
 	void OnEndClicked();
 
-	UPROPERTY()
-	TObjectPtr<UCustomerViewModel> ViewModel;
 };

@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Component/NavigationMovementComponent.h"
+#include "../Common/Component/NavigationMovementComponent.h"
 #include "CustomerBehaviorComponent.h"
 #include "Customer.generated.h"
 
