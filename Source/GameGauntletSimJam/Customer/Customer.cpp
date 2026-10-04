@@ -30,9 +30,13 @@ void ACustomer::StrollAround()
 	CustomerBehaviorComponent->ChangeState(EBehaviorState::Strolling);
 }
 
-void ACustomer::SeeShop(AShop* Shop)
+void ACustomer::SeeBuilding(ABaseBuilding* Building)
 {
-	if (FMath::FRand() < InterestedChance) CustomerBehaviorComponent->GoToShop(Shop);
+	AShop* Shop = Cast<AShop>(Building);
+	if (Shop)
+	{
+		if (FMath::FRand() < InterestedChance) CustomerBehaviorComponent->GoToShop(Shop);
+	}
 }
 
 void ACustomer::MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation)

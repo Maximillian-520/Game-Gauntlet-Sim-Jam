@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "../Common/Component/NavigationMovementComponent.h"
-#include "../Shop/Shop.h"
+#include "../Building/Shop/Shop.h"
 #include "CustomerBehaviorComponent.generated.h"
 
 UENUM(BlueprintType)

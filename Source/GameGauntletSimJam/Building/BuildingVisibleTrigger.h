@@ -4,24 +4,25 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "../Customer/Customer.h"
-#include "ShopVisibleTrigger.generated.h"
+#include "./Plot/Plot.h"
+#include "BuildingVisibleTrigger.generated.h"
 
 UCLASS()
-class GAMEGAUNTLETSIMJAM_API AShopVisibleTrigger : public AActor
+class GAMEGAUNTLETSIMJAM_API ABuildingVisibleTrigger : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	AShopVisibleTrigger();
+	ABuildingVisibleTrigger();
 
 protected:
-    virtual void BeginPlay() override;
+	virtual void BeginPlay() override;
 
     UPROPERTY(VisibleAnywhere)
     UBoxComponent* TriggerBox;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trigger")
-    AShop* Shop;
+    TArray<TObjectPtr<APlot>> Plots;
 
     UFUNCTION()
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -32,7 +33,6 @@ protected:
     void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-private:	
-	
+private:
 
 };

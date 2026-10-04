@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "../BaseBuilding.h"
 #include "Engine/TargetPoint.h"
 #include "Shop.generated.h"
 
 UCLASS()
-class GAMEGAUNTLETSIMJAM_API AShop : public AActor
+class GAMEGAUNTLETSIMJAM_API AShop : public ABaseBuilding
 {
 	GENERATED_BODY()
 	

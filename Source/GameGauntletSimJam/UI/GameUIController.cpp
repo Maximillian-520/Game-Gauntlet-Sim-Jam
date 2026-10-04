@@ -39,6 +39,15 @@ void AGameUIController::BeginPlay()
             if (TrainControlUI) TrainControlUI->AddToViewport();
         }
     }
+
+    if (BuildingControlUIBlueprint)
+    {
+        if (PC)
+        {
+            BuildingControlUI = CreateWidget<UBuildingControlUI>(PC, BuildingControlUIBlueprint);
+            if (BuildingControlUI) BuildingControlUI->AddToViewport();
+        }
+    }
 }
 
 void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -57,6 +66,11 @@ void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
     {
         TrainControlUI->RemoveFromParent();
         TrainControlUI = nullptr;
+    }
+    if (BuildingControlUI)
+    {
+        BuildingControlUI->RemoveFromParent();
+        BuildingControlUI = nullptr;
     }
 
     Super::EndPlay(EndPlayReason);

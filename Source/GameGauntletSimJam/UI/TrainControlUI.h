@@ -4,7 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/VerticalBox.h"
-#include "../Common/ViewModel/TrainViewModel.h"
+#include "./ViewModel/TrainViewModel.h"
 #include "./Parts/TrainNotificationUI.h"
 #include "TrainControlUI.generated.h"
 

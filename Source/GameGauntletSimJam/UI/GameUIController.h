@@ -5,6 +5,7 @@
 #include "MoneyUI.h"
 #include "CustomerControlUI.h"
 #include "TrainControlUI.h"
+#include "BuildingControlUI.h"
 #include "GameUIController.generated.h"
 
 UCLASS()
@@ -24,6 +25,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UTrainControlUI> TrainControlUIBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UBuildingControlUI> BuildingControlUIBlueprint;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,5 +37,6 @@ private:
 	UMoneyUI* MoneyUI;
 	UCustomerControlUI* CustomerControlUI;
 	UTrainControlUI* TrainControlUI;
+	UBuildingControlUI* BuildingControlUI;
 
 };

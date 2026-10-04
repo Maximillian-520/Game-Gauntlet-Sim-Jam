@@ -42,7 +42,7 @@ public:
 	void StrollAround();
 
 	UFUNCTION(BlueprintCallable, Category = "Customer")
-	void SeeShop(AShop* Shop);
+	void SeeBuilding(ABaseBuilding* Building);
 
 	UFUNCTION(BlueprintCallable, Category = "Customer")
 	void MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation);

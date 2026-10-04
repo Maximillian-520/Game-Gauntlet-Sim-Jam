@@ -7,7 +7,7 @@
 #include "MVVMSubsystem.h"
 #include "View/MVVMView.h"
 #include "../Customer/CustomerController.h"
-#include "../Common/ViewModel/CustomerViewModel.h"
+#include "./ViewModel/CustomerViewModel.h"
 #include "CustomerControlUI.generated.h"
 
 class UButton;
