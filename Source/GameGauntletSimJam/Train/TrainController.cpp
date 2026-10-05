@@ -12,6 +12,10 @@ void ATrainController::BeginPlay()
 	Super::BeginPlay();
 	
 	TrainSpawner->OnTrainSpawned.AddDynamic(this, &ATrainController::HandleTrainSpawned);
+	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
+	{
+		TrackerManager->OnTrackIntervalChanged.AddDynamic(this, &ATrainController::HandleTrackIntervalChanged);
+	}
 }
 
 void ATrainController::Tick(float DeltaTime)
@@ -23,6 +27,17 @@ void ATrainController::Tick(float DeltaTime)
 // ==================================================
 //           Controller
 // ==================================================
+
+void ATrainController::UpdateTrainTrackInterval()
+{
+	UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance());
+	if (!TrackerManager) return;
+
+	for (ATrain* Train : Trains)
+	{
+		Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
+	}
+}
 
 FText ATrainController::GetFormatedDistanceText(float Distance)
 {
@@ -51,8 +66,14 @@ void ATrainController::HandleTrainSpawned(ATrain* Train)
 	Train->OnTrainHitCustomer.AddDynamic(this, &ATrainController::HandleTrainHitCustomer);
 	Train->OnDestroyed.AddDynamic(this, &ATrainController::HandleTrainDestroyed);
 	
+	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
+	{
+		Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
+	}
+
 	Trains.Add(Train);
 	TrainCount++;
+	UpdateTrainTrackInterval();
 
 	if (TrainCount >= MaxTrainCount) TrainSpawner->StopSpawning();
 
@@ -106,5 +127,4 @@ void ATrainController::HandleTrainDestroyed(AActor* DestroyedActor)
 	TrainCount--;
 
 	if (TrainCount < MaxTrainCount) TrainSpawner->StartSpawning();
-
 }

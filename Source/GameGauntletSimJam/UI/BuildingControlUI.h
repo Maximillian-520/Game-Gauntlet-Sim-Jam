@@ -24,17 +24,39 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BuildShopButton;
+	// ==================================================
+	//           Main
+	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> CloseButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> CostText;
+	// ==================================================
+	//           Shop
+	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Build")
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> BuildShopButton;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> ShopCostText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Build")
 	TSubclassOf<ABaseBuilding> ShopBlueprint;
+
+	// ==================================================
+	//           Tracker
+	// ==================================================
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> BuildTrackerButton;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> TrackerCostText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Build")
+	TSubclassOf<ABaseBuilding> TrackerBlueprint;
+
 
 private:
 	UPROPERTY()
@@ -45,4 +67,7 @@ private:
 
 	UFUNCTION()
 	void HandleBuildShop();
+
+	UFUNCTION()
+	void HandleBuildTracker();
 };

@@ -13,10 +13,6 @@ void ABuildingController::BeginPlay()
 	{
 		Plot->OnPlotClicked.AddUniqueDynamic(this, &ABuildingController::HandlePlotClicked);
 	}
-
-	// Temp
-	UMoneyManager* Money = GetGameInstance()->GetSubsystem<UMoneyManager>();
-	Money->AddMoney(1000);
 }
 
 void ABuildingController::BuildOnPlot(APlot* Plot, TSubclassOf<ABaseBuilding> BuildingBlueprint)

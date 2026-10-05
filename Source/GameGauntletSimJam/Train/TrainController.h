@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../Common/Manager/TrackerManager.h"
 #include "TrainSpawner.h"
 #include "TrainController.generated.h"
 
@@ -29,6 +30,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
 	int32 MaxTrainCount = 1;
+
+	UFUNCTION(BlueprintCallable, Category = "Event")
+	void UpdateTrainTrackInterval();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationRequested OnNotificationRequested;
@@ -62,6 +66,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Event")
 	void HandleTrainDestroyed(AActor* DestroyedActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Event")
+	void HandleTrackIntervalChanged() { UpdateTrainTrackInterval(); }
 
 protected:
 	virtual void BeginPlay() override;

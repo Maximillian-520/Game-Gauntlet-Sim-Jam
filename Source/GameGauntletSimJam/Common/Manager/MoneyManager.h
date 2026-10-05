@@ -12,6 +12,9 @@ class UMoneyManager : public UGameInstanceSubsystem
     GENERATED_BODY()
 
 public:
+    UFUNCTION(BlueprintCallable, Category = "Money")
+    void Reset(int32 InitialMoney = 0);
+
     UFUNCTION(BlueprintPure, Category = "Money")
     int32 GetMoney() const { return Money; }
 

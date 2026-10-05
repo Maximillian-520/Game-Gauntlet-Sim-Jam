@@ -14,13 +14,20 @@ void UBuildingControlUI::NativeOnInitialized()
 
 	ViewModel->OnPlotSelected.AddDynamic(this, &UBuildingControlUI::HandlePlotSelected);
 
-	BuildShopButton->OnClicked.AddDynamic(this, &UBuildingControlUI::HandleBuildShop);
 	CloseButton->OnClicked.AddDynamic(this, &UBuildingControlUI::Hide);
+	BuildShopButton->OnClicked.AddDynamic(this, &UBuildingControlUI::HandleBuildShop);
+	BuildTrackerButton->OnClicked.AddDynamic(this, &UBuildingControlUI::HandleBuildTracker);
 
-	if (CostText && ShopBlueprint)
+	if (ShopCostText && ShopBlueprint)
 	{
 		const int32 Cost = ShopBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
-		CostText->SetText(FText::AsNumber(Cost));
+		ShopCostText->SetText(FText::AsNumber(Cost));
+	}
+
+	if (TrackerCostText && TrackerBlueprint)
+	{
+		const int32 Cost = TrackerBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
+		TrackerCostText->SetText(FText::AsNumber(Cost));
 	}
 
 	Hide();
@@ -44,5 +51,11 @@ void UBuildingControlUI::HandlePlotSelected()
 void UBuildingControlUI::HandleBuildShop()
 {
 	if (ViewModel) ViewModel->BuildRequested(ShopBlueprint);
+	Hide();
+}
+
+void UBuildingControlUI::HandleBuildTracker()
+{
+	if (ViewModel) ViewModel->BuildRequested(TrackerBlueprint);
 	Hide();
 }
