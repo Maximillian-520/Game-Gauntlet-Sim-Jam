@@ -18,7 +18,11 @@ public:
 	TSubclassOf<UTrainNotificationUI> TrainNotificationUIBlueprint;
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	UTrainNotificationUI* SpawnNotification(const FText& Message);
+	UTrainNotificationUI* SpawnOrUpdateNotification(const FText& TrainName, const FText& Message);
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveNotification(const FText& TrainName);
+	void RemoveNotification(UTrainNotificationUI* NotificationUI);
 
 protected:
 	virtual void NativeConstruct() override;
@@ -29,11 +33,16 @@ protected:
 	UVerticalBox* NotificationBox;
 
 private:
+	UPROPERTY()
 	TObjectPtr<UTrainViewModel> ViewModel;
 
-	UFUNCTION()
-	void HandleNotificationRequested(const FText& Message);
+	UPROPERTY()
+	TMap<FName, UTrainNotificationUI*> TrainNotificationMap;
 
-	void RemoveNotification(UTrainNotificationUI* Notification);
+	UFUNCTION()
+	void HandleNotificationRequested(const FText& TrainName, const FText& Message);
+
+	UFUNCTION()
+	void HandleNotificationDeleted(const FText& TrainName);
 
 };

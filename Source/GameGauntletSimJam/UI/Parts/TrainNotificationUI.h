@@ -15,16 +15,14 @@ class GAMEGAUNTLETSIMJAM_API UTrainNotificationUI : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "UI")
-	float NotificationDuration = 3.0f;
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void SetMessage(const FText& Message);
 
-	UPROPERTY(EditAnywhere, Category = "UI")
-	FText NotificationMessage = FText::FromString("Train Notification");
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void Disappear();
 
 protected:
 	virtual void NativeConstruct() override;
-
-	virtual void NativeDestruct() override;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MessageText;
@@ -36,7 +34,5 @@ protected:
 	bool bIsMarkedForDestoy = false;
 
 private:
-	FTimerHandle DisappearTimer;
-
-	void Disappear();
+	
 };

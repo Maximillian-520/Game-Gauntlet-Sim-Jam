@@ -13,6 +13,7 @@ void UTrainControlUI::NativeConstruct()
 	}
 
 	ViewModel->OnNotificationRequested.AddDynamic(this, &UTrainControlUI::HandleNotificationRequested);
+	ViewModel->OnNotificationDeleted.AddDynamic(this, &UTrainControlUI::HandleNotificationDeleted);
 }
 
 void UTrainControlUI::NativeDestruct()
@@ -22,28 +23,59 @@ void UTrainControlUI::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-UTrainNotificationUI* UTrainControlUI::SpawnNotification(const FText& Message)
+UTrainNotificationUI* UTrainControlUI::SpawnOrUpdateNotification(const FText& TrainName, const FText& Message)
 {
+	UTrainNotificationUI* Notification = nullptr;
+	FName Key(*TrainName.ToString());
 
-	if (!TrainNotificationUIBlueprint || !NotificationBox) return nullptr;
+	// Find existing one
+	if (TrainNotificationMap.Contains(Key)) Notification = TrainNotificationMap.FindRef(Key);
+	// Create if not found
+	else if (TrainNotificationUIBlueprint || NotificationBox)
+	{
+		Notification = CreateWidget<UTrainNotificationUI>(GetOwningPlayer(), TrainNotificationUIBlueprint);
+		if (!Notification) return nullptr;
+		NotificationBox->AddChild(Notification);
+		TrainNotificationMap.Add(Key, Notification);
+	}
 
-	UTrainNotificationUI* Notification = CreateWidget<UTrainNotificationUI>(GetOwningPlayer(), TrainNotificationUIBlueprint);
-	if (!Notification) return nullptr;
-
-	// Set the message BEFORE adding it, so it's ready when NativeConstruct runs
-	Notification->NotificationMessage = Message;
-
-	NotificationBox->AddChild(Notification);
+	if (Notification) Notification->SetMessage(Message);
 
 	return Notification;
 }
 
-void UTrainControlUI::HandleNotificationRequested(const FText& Message)
+void UTrainControlUI::RemoveNotification(const FText& TrainName)
 {
-	SpawnNotification(Message);
+	UTrainNotificationUI* Notification = nullptr;
+	FName Key(*TrainName.ToString());
+
+	if (TrainNotificationMap.Contains(Key))
+	{
+		Notification = TrainNotificationMap.FindRef(Key);
+		if (Notification) Notification->Disappear();
+		TrainNotificationMap.Remove(Key);
+	}
 }
 
 void UTrainControlUI::RemoveNotification(UTrainNotificationUI* Notification)
 {
-	if (Notification) Notification->RemoveFromParent();
+	if (!Notification) return;
+
+	Notification->Disappear();
+
+	if (const FName* Key = TrainNotificationMap.FindKey(Notification))
+	{
+		const FName KeyCopy = *Key; // copy first: Key points into the map
+		TrainNotificationMap.Remove(KeyCopy);
+	}
+}
+
+void UTrainControlUI::HandleNotificationRequested(const FText& TrainName, const FText& Message)
+{
+	SpawnOrUpdateNotification(TrainName, Message);
+}
+
+void UTrainControlUI::HandleNotificationDeleted(const FText& TrainName)
+{
+	RemoveNotification(TrainName);
 }

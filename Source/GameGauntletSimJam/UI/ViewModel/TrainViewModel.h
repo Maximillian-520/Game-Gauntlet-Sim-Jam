@@ -14,11 +14,30 @@ public:
 	void Initialize(ATrainController* InController);
 
 	UFUNCTION()
-	void HandleNotificationRequested(const FText& Message) { BroadcastOnNotification(Message); }
+	void HandleNotificationRequested(const FText& TrainName, const FText& Message)
+	{
+		BroadcastOnNotificationRequested(TrainName, Message);
+	}
+
+	UFUNCTION()
+	void HandleNotificationDeleted(const FText& TrainName)
+	{
+		BroadcastOnNotificationDeleted(TrainName);
+	}
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationRequested OnNotificationRequested;
-	void BroadcastOnNotification(const FText& Message) { OnNotificationRequested.Broadcast(Message); }
+	void BroadcastOnNotificationRequested(const FText& TrainName, const FText& Message)
+	{
+		OnNotificationRequested.Broadcast(TrainName, Message);
+	}
+
+	UPROPERTY(BlueprintAssignable)
+	FOnNotificationDeleted OnNotificationDeleted;
+	void BroadcastOnNotificationDeleted(const FText& TrainName)
+	{
+		OnNotificationDeleted.Broadcast(TrainName);
+	}
 
 private:
 	TWeakObjectPtr<ATrainController> Controller;

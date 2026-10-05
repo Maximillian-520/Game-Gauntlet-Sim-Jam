@@ -1,5 +1,7 @@
 #include "Train.h"
 
+TSet<int32> ATrain::UsedInstanceNumber;
+
 ATrain::ATrain()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,7 +24,16 @@ void ATrain::BeginPlay()
 
 	HitBox->OnComponentBeginOverlap.AddDynamic(this, &ATrain::OnHitBoxBeginOverlap);
 
+	TrainNumber = GenerateUniqueNumber();
+
 	Travel();
+}
+
+void ATrain::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (TrainNumber != 0) ClearUniqueNumber(TrainNumber);
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void ATrain::Tick(float DeltaTime)
@@ -33,11 +44,21 @@ void ATrain::Tick(float DeltaTime)
 	if (bIsTraveling)
 	{
 		TravelTimer -= DeltaTime;
-		if (TravelTimer <= 0) PassThrough();
+		if (TravelTimer <= 0)
+		{
+			OnTrainArrived.Broadcast(this);
+			PassThrough();
+		}
+
+		TravelUpdateTimer -= DeltaTime;
+		if (TravelUpdateTimer <= 0)
+		{
+			OnTrainTravelUpdate.Broadcast(this);
+			TravelUpdateTimer = TravelUpdateInterval;
+		}
 	}
 
 	// --- Passing ---
-
 	if (LinearMovementComponent && bIsPassing)
 	{
 		const FVector ToTarget = PassTargetLocation - GetActorLocation();
@@ -56,11 +77,16 @@ void ATrain::Tick(float DeltaTime)
 
 }
 
+// ==================================================
+//           Main
+// ==================================================
+
 void ATrain::Travel()
 {
 	bIsTraveling = true;
 	bIsPassing = false;
 	TravelTimer = FMath::FRandRange(MinTravelDuration, MaxTravelDuration);
+	TravelUpdateTimer = TravelUpdateInterval;
 	SetActorHiddenInGame(true);
 }
 
@@ -85,4 +111,45 @@ void ATrain::OnHitBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (!Customer) return;
 
 	OnTrainHitCustomer.Broadcast(Customer);
+}
+
+// ==================================================
+//           Naming
+// ==================================================
+
+FText ATrain::GetTrainName() const
+{
+	FNumberFormattingOptions Options;
+	Options.UseGrouping = false;
+	Options.MinimumIntegralDigits = 3;
+
+	FText TrainNumberText = FText::AsNumber(TrainNumber, &Options);
+
+	return FText::Format(INVTEXT("{0}-{1}"), TrainCode, TrainNumberText);
+}
+
+int32 ATrain::GenerateUniqueNumber() const
+{
+	int32 Number = 0;
+
+	// Keep randomizing number if random number already exist,
+	// capped to MaxRandomIteration interations
+	for (int32 Index = 0; Index < MaxRandomIteration; Index++)
+	{
+		int32 RandomNumber = FMath::RandRange(1, 999);
+		if (!UsedInstanceNumber.Contains(RandomNumber))
+		{
+			Number = RandomNumber;
+			break;
+		}
+	}
+
+	if (Number != 0) UsedInstanceNumber.Add(Number);
+
+	return Number;
+}
+
+void ATrain::ClearUniqueNumber(int32 Number) const
+{
+	if (UsedInstanceNumber.Contains(Number)) UsedInstanceNumber.Remove(Number);
 }

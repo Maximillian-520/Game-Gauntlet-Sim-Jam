@@ -15,6 +15,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	float TestVar;
 
+	// ==================================================
+	//           Group
+	// ==================================================
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	FVector TestVector;
 

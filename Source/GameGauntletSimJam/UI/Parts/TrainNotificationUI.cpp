@@ -4,26 +4,19 @@ void UTrainNotificationUI::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (MessageText) MessageText->SetText(NotificationMessage);
-
 	if (FadeAnim) PlayAnimation(FadeAnim, 0.f, 1, EUMGSequencePlayMode::Forward);
-
-	GetWorld()->GetTimerManager().SetTimer(
-		DisappearTimer, this, &UTrainNotificationUI::Disappear, NotificationDuration, false);
 }
 
-void UTrainNotificationUI::NativeDestruct()
+void UTrainNotificationUI::SetMessage(const FText& Message)
 {
-	if (UWorld* World = GetWorld()) World->GetTimerManager().ClearTimer(DisappearTimer);
-
-	Super::NativeDestruct();
+	if (MessageText) MessageText->SetText(Message);
 }
 
 void UTrainNotificationUI::Disappear()
 {
 	if (FadeAnim)
 	{
-		bIsMarkedForDestoy = true;
+		bIsMarkedForDestoy = true; // Destroy UI after animation finished in blueprint
 		PlayAnimation(FadeAnim, 0.f, 1, EUMGSequencePlayMode::Reverse);
 	}
 	else RemoveFromParent();
