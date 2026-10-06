@@ -44,11 +44,7 @@ void ATrain::Tick(float DeltaTime)
 	if (bIsTraveling)
 	{
 		TravelTimer -= DeltaTime;
-		if (TravelTimer <= 0)
-		{
-			OnTrainArrived.Broadcast(this);
-			PassThrough();
-		}
+		if (TravelTimer <= 0) OnTrainArrived.Broadcast(this);
 
 		TravelUpdateTimer -= DeltaTime;
 		if (TravelUpdateTimer <= 0)

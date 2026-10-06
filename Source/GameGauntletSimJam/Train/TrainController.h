@@ -81,10 +81,14 @@ protected:
 
 	FText GetFormatedDistanceText(float Distance);
 
+	void CheckTrainPassQueue();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Controller")
 	int32 TrainCount = 0;
-
 	TArray<ATrain*> Trains;
+
+	ATrain* CurrentTrainPassing;
+	TArray<ATrain*> TrainPassQueue;
 
 };

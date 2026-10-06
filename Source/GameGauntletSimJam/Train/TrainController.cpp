@@ -55,6 +55,17 @@ FText ATrainController::GetFormatedDistanceText(float Distance)
 	return FText::Format(NSLOCTEXT("Train", "DistanceKilometers", "{0} km"), FText::AsNumber(Distance, &Options));
 }
 
+void ATrainController::CheckTrainPassQueue()
+{
+	if (CurrentTrainPassing) return;
+	if (TrainPassQueue.Num() <= 0) return;
+
+	CurrentTrainPassing = TrainPassQueue[0];
+	TrainPassQueue.RemoveAt(0);
+
+	CurrentTrainPassing->AllowPassThrough();
+}
+
 // ==================================================
 //           Event
 // ==================================================
@@ -108,6 +119,9 @@ void ATrainController::HandleTrainArrived(ATrain* Train)
 		TrainName
 	);
 	BroadcastOnNotificationRequested(TrainName, TrainText);
+
+	TrainPassQueue.Add(Train);
+	CheckTrainPassQueue();
 }
 
 void ATrainController::HandleTrainHitCustomer(ACustomer* HitCustomer)
@@ -125,6 +139,9 @@ void ATrainController::HandleTrainDestroyed(AActor* DestroyedActor)
 
 	Trains.Remove(Train);
 	TrainCount--;
+
+	CurrentTrainPassing = nullptr;
+	CheckTrainPassQueue();
 
 	if (TrainCount < MaxTrainCount) TrainSpawner->StartSpawning();
 }

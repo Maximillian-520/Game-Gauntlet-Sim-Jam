@@ -72,8 +72,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Train|Travel")
 	FOnTrainTravelUpdate OnTrainTravelUpdate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Train|Main")
+	UPROPERTY(BlueprintAssignable, Category = "Train|Travel")
 	FOnTrainArrived OnTrainArrived;
+
+	// ==================================================
+	//           Pass Through
+	// ==================================================
+
+	UFUNCTION(BlueprintCallable, Category = "Train|PassThrough")
+	void AllowPassThrough() { PassThrough(); }
 
 	// ==================================================
 	//           Naming
