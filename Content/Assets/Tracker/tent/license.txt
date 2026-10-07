@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tent model free
+* source:	https://sketchfab.com/3d-models/tent-model-free-5083b37b24c14ea7a647f578f29dc0b3
+* author:	joanatrevino816 (https://sketchfab.com/joanatrevino816)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tent model free" (https://sketchfab.com/3d-models/tent-model-free-5083b37b24c14ea7a647f578f29dc0b3) by joanatrevino816 (https://sketchfab.com/joanatrevino816) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

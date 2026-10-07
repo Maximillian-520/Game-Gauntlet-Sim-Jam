@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
 	int32 BuildCost = 100;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Building")
+	TArray<TSubclassOf<AActor>> BuildingLevelBlueprints;
+
 	// ==================================================
 	//           Upgrade
 	// ==================================================
@@ -59,8 +62,22 @@ public:
 	int32 GetDemolishValue() const;
 
 protected:
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	// ==================================================
+	//           Main
+	// ==================================================
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
+	TObjectPtr<USceneComponent> Root;
+
+	void SetBuildingLevelMesh();
+
 	UPROPERTY(VisibleAnywhere, Category = "Building")
 	int32 Level = 1;
 
 private:
+	UPROPERTY()
+	TObjectPtr<AActor> CurrentBuildingLevelMesh = nullptr;
 };

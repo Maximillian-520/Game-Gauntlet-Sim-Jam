@@ -27,15 +27,10 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
-	TObjectPtr<USceneComponent> Root;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
 	TObjectPtr<USceneComponent> StandingMarker;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
 	TArray<int32> ItemCosts = TArray<int32>{10};
 
 private:
-	
-
 };

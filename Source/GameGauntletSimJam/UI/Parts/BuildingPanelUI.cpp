@@ -50,6 +50,7 @@ void UBuildingPanelUI::Show(int32 PlotNumber, ABaseBuilding* Building)
 		DemolishValueText->SetText(FText::FromString(FormattedValueText));
 	}
 
+	CurrentBuilding = Building;
 	UpdatePanel();
 
 	SetVisibility(ESlateVisibility::Visible);
@@ -57,6 +58,8 @@ void UBuildingPanelUI::Show(int32 PlotNumber, ABaseBuilding* Building)
 
 void UBuildingPanelUI::Hide()
 {
+	CurrentBuilding = nullptr;
+
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -66,5 +69,6 @@ void UBuildingPanelUI::UpdatePanel()
 
 	bool bIsMaxLevel = CurrentBuilding->IsMaxLevel();
 	bool bCanAfford = MoneyManager->GetMoney() >= UpgradeCost;
+
 	UpgradeButton->SetIsEnabled(!bIsMaxLevel && bCanAfford);
 }

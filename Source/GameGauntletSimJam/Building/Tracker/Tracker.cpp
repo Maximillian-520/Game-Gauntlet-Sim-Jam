@@ -3,7 +3,6 @@
 ATracker::ATracker()
 {
 	//PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void ATracker::BeginPlay()
@@ -18,6 +17,13 @@ void ATracker::BeginPlay()
 //	Super::Tick(DeltaTime);
 //
 //}
+
+void ATracker::Upgrade()
+{
+	Super::Upgrade();
+
+	SetBuildingLevelMesh();
+}
 
 void ATracker::UpdateTrackIntervalReduction()
 {

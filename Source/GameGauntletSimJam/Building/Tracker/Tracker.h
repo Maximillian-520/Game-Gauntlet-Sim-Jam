@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tracker")
 	float TrackIntervalReductionPerLevel = 0.5;
 
+	virtual void Upgrade();
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -30,5 +32,4 @@ protected:
 
 private:
 	float CurrentTrackIntervalReduction;
-
 };

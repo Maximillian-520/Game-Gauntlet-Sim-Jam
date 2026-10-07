@@ -55,6 +55,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Plot")
 	TObjectPtr<UBoxComponent> ClickArea;
 
+	void SetPlot();
+
 private:
 
 };

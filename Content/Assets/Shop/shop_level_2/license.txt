@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cotton Candy Stall
+* source:	https://sketchfab.com/3d-models/cotton-candy-stall-f8e292cc275f4d6e8bdb04c218f2360b
+* author:	Steph (https://sketchfab.com/StephC.Art)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cotton Candy Stall" (https://sketchfab.com/3d-models/cotton-candy-stall-f8e292cc275f4d6e8bdb04c218f2360b) by Steph (https://sketchfab.com/StephC.Art) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

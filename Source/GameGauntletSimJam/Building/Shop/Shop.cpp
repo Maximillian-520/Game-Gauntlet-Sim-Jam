@@ -4,17 +4,13 @@ AShop::AShop()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	SetRootComponent(Root);
-
 	StandingMarker = CreateDefaultSubobject<USceneComponent>(TEXT("StandingMarker"));
-	StandingMarker->SetupAttachment(Root);
+	if (Root) StandingMarker->SetupAttachment(Root);
 }
 
 void AShop::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AShop::Tick(float DeltaTime)
@@ -26,6 +22,8 @@ void AShop::Tick(float DeltaTime)
 void AShop::Upgrade()
 {
 	Super::Upgrade();
+
+	SetBuildingLevelMesh();
 }
 
 FVector AShop::GetStandingLocation() const

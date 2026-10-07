@@ -13,6 +13,13 @@ APlot::APlot()
 	ClickArea->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 }
 
+void APlot::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	Super::NotifyActorOnClicked(ButtonPressed);
+
+	OnPlotClicked.Broadcast(this);
+}
+
 bool APlot::CanBuild(TSubclassOf<ABaseBuilding> BuildingClass) const
 {
 	return BuildingClass && !HasBuilding();
@@ -30,6 +37,8 @@ ABaseBuilding* APlot::BuildBuilding(TSubclassOf<ABaseBuilding> BuildingBlueprint
 		BuildingBlueprint, GetActorTransform(), Params
 	);
 
+	SetPlot();
+
 	OnBuildingChanged.Broadcast(Building);
 	return Building;
 }
@@ -42,6 +51,8 @@ void APlot::UpgradeBuilding()
 
 		OnBuildingChanged.Broadcast(nullptr);
 	}
+
+	SetPlot();
 }
 
 void APlot::DemolishBuilding()
@@ -52,12 +63,11 @@ void APlot::DemolishBuilding()
 		Building = nullptr;
 		OnBuildingChanged.Broadcast(nullptr);
 	}
+
+	SetPlot();
 }
 
-void APlot::NotifyActorOnClicked(FKey ButtonPressed)
+void APlot::SetPlot()
 {
-	Super::NotifyActorOnClicked(ButtonPressed);
-
-	OnPlotClicked.Broadcast(this);
+	SetActorHiddenInGame(Building != nullptr);
 }
-
