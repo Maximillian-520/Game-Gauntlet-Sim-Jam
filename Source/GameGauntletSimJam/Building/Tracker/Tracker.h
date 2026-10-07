@@ -13,10 +13,10 @@ class GAMEGAUNTLETSIMJAM_API ATracker : public ABaseBuilding
 public:
 	ATracker();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tracker")
 	float BaseTrackIntervalReduction = 1.0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tracker")
 	float TrackIntervalReductionPerLevel = 0.5;
 
 protected:

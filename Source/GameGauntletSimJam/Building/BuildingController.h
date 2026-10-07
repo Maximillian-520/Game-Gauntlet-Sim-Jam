@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "./Plot/Plot.h"
+#include "../Common/Manager/MoneyManager.h"
 #include "BuildingController.generated.h"
 
 UCLASS()
@@ -21,6 +22,12 @@ public:
 
 	UFUNCTION()
 	void BuildOnPlot(APlot* Plot, TSubclassOf<ABaseBuilding> BuildingBlueprint);
+
+	UFUNCTION()
+	void UpgradeOnPlot(APlot* Plot);
+
+	UFUNCTION()
+	void DemolishOnPlot(APlot* Plot);
 
 protected:
 	virtual void BeginPlay() override;

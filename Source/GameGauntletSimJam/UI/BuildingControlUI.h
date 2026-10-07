@@ -6,6 +6,8 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "./ViewModel/BuildingViewModel.h"
+#include "./Parts/BuildingPanelUI.h"
+#include "./Parts/EmptyBuildingPanelUI.h"
 #include "../Building/BaseBuilding.h"
 #include "BuildingControlUI.generated.h"
 
@@ -15,50 +17,16 @@ class GAMEGAUNTLETSIMJAM_API UBuildingControlUI : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void Show();
-
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void Hide();
 
 protected:
 	virtual void NativeOnInitialized() override;
 
-	// ==================================================
-	//           Main
-	// ==================================================
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UBuildingPanelUI> BuildingPanel;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> CloseButton;
+	TObjectPtr<UEmptyBuildingPanelUI> EmptyBuildingPanel;
 
-	// ==================================================
-	//           Shop
-	// ==================================================
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BuildShopButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> ShopCostText;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Build")
-	TSubclassOf<ABaseBuilding> ShopBlueprint;
-
-	// ==================================================
-	//           Tracker
-	// ==================================================
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BuildTrackerButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> TrackerCostText;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Build")
-	TSubclassOf<ABaseBuilding> TrackerBlueprint;
-
-
-private:
 	UPROPERTY()
 	TObjectPtr<UBuildingViewModel> ViewModel;
 
@@ -66,8 +34,13 @@ private:
 	void HandlePlotSelected();
 
 	UFUNCTION()
-	void HandleBuildShop();
+	void HandleBuildButtonPressed(TSubclassOf<ABaseBuilding> BuildingBlueprint);
 
 	UFUNCTION()
-	void HandleBuildTracker();
+	void HandleUpgradeButtonPressed();
+
+	UFUNCTION()
+	void HandleDemolishButtonPressed();
+
+private:
 };

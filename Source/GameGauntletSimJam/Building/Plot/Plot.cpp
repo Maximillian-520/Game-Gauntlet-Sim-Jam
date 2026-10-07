@@ -18,25 +18,30 @@ bool APlot::CanBuild(TSubclassOf<ABaseBuilding> BuildingClass) const
 	return BuildingClass && !HasBuilding();
 }
 
-ABaseBuilding* APlot::BuildBuilding(TSubclassOf<ABaseBuilding> BuildingClass)
+ABaseBuilding* APlot::BuildBuilding(TSubclassOf<ABaseBuilding> BuildingBlueprint)
 {
-	if (!CanBuild(BuildingClass)) return nullptr;
-
-	const int32 Cost = BuildingClass->GetDefaultObject<ABaseBuilding>()->BuildCost;
-
-	UMoneyManager* Money = GetGameInstance()->GetSubsystem<UMoneyManager>();
-	if (Money && !Money->TrySpend(Cost)) return nullptr;
+	if (!CanBuild(BuildingBlueprint)) return nullptr;
 
 	FActorSpawnParameters Params;
 	Params.Owner = this;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	Building = GetWorld()->SpawnActor<ABaseBuilding>(
-		BuildingClass, GetActorTransform(), Params
+		BuildingBlueprint, GetActorTransform(), Params
 	);
 
 	OnBuildingChanged.Broadcast(Building);
 	return Building;
+}
+
+void APlot::UpgradeBuilding()
+{
+	if (Building)
+	{
+		Building->Upgrade();
+
+		OnBuildingChanged.Broadcast(nullptr);
+	}
 }
 
 void APlot::DemolishBuilding()
@@ -53,6 +58,6 @@ void APlot::NotifyActorOnClicked(FKey ButtonPressed)
 {
 	Super::NotifyActorOnClicked(ButtonPressed);
 
-	if (!HasBuilding()) OnPlotClicked.Broadcast(this);
+	OnPlotClicked.Broadcast(this);
 }
 

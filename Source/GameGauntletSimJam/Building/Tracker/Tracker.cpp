@@ -6,7 +6,6 @@ ATracker::ATracker()
 
 }
 
-// Called when the game starts or when spawned
 void ATracker::BeginPlay()
 {
 	Super::BeginPlay();

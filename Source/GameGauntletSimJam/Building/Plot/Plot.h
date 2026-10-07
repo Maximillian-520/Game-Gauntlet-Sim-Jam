@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "../BaseBuilding.h"
-#include "../../Common/Manager/MoneyManager.h"
 #include "Plot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlotClicked, APlot*, Plot);
@@ -21,6 +20,9 @@ public:
 	APlot();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Plot")
+	int32 PlotNumber = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Plot")
 	ABaseBuilding* Building = nullptr;
 
 	UFUNCTION(BlueprintCallable, Category = "Plot")
@@ -30,7 +32,10 @@ public:
 	bool CanBuild(TSubclassOf<ABaseBuilding> BuildingClass) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Plot")
-	ABaseBuilding* BuildBuilding(TSubclassOf<ABaseBuilding> BuildingClass);
+	ABaseBuilding* BuildBuilding(TSubclassOf<ABaseBuilding> BuildingBlueprint);
+
+	UFUNCTION(BlueprintCallable, Category = "Plot")
+	void UpgradeBuilding();
 
 	UFUNCTION(BlueprintCallable, Category = "Plot")
 	void DemolishBuilding();

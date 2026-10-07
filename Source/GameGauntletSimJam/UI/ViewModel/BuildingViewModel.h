@@ -16,6 +16,10 @@ public:
 	void Initialize(ABuildingController* InController);
 
 	void BuildRequested(TSubclassOf<ABaseBuilding> BuildingBlueprint);
+
+	void UpgradeRequested();
+
+	void DemolishRequested();
 	
 	APlot* GetSelectedPlot() const { return SelectedPlot; }
 

@@ -14,48 +14,42 @@ void UBuildingControlUI::NativeOnInitialized()
 
 	ViewModel->OnPlotSelected.AddDynamic(this, &UBuildingControlUI::HandlePlotSelected);
 
-	CloseButton->OnClicked.AddDynamic(this, &UBuildingControlUI::Hide);
-	BuildShopButton->OnClicked.AddDynamic(this, &UBuildingControlUI::HandleBuildShop);
-	BuildTrackerButton->OnClicked.AddDynamic(this, &UBuildingControlUI::HandleBuildTracker);
-
-	if (ShopCostText && ShopBlueprint)
-	{
-		const int32 Cost = ShopBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
-		ShopCostText->SetText(FText::AsNumber(Cost));
-	}
-
-	if (TrackerCostText && TrackerBlueprint)
-	{
-		const int32 Cost = TrackerBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
-		TrackerCostText->SetText(FText::AsNumber(Cost));
-	}
-
-	Hide();
-}
-
-void UBuildingControlUI::Show()
-{
-	SetVisibility(ESlateVisibility::Visible);
-}
-
-void UBuildingControlUI::Hide()
-{
-	SetVisibility(ESlateVisibility::Collapsed);
+	EmptyBuildingPanel->OnBuildButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleBuildButtonPressed);
+	BuildingPanel->OnUpgradeButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleUpgradeButtonPressed);
+	BuildingPanel->OnDemolishButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleDemolishButtonPressed);
 }
 
 void UBuildingControlUI::HandlePlotSelected()
 {
-	Show();
+	APlot* Plot = ViewModel->GetSelectedPlot();
+	if (!Plot) return;
+
+	if (Plot->Building)
+	{
+		EmptyBuildingPanel->Hide();
+		BuildingPanel->Show(Plot->PlotNumber, Plot->Building);
+	}
+	else
+	{
+		EmptyBuildingPanel->Show(Plot->PlotNumber);
+		BuildingPanel->Hide();
+	}
 }
 
-void UBuildingControlUI::HandleBuildShop()
+void UBuildingControlUI::HandleBuildButtonPressed(TSubclassOf<ABaseBuilding> BuildingBlueprint)
 {
-	if (ViewModel) ViewModel->BuildRequested(ShopBlueprint);
-	Hide();
+	if (ViewModel) ViewModel->BuildRequested(BuildingBlueprint);
+	EmptyBuildingPanel->Hide();
 }
 
-void UBuildingControlUI::HandleBuildTracker()
+void UBuildingControlUI::HandleUpgradeButtonPressed()
 {
-	if (ViewModel) ViewModel->BuildRequested(TrackerBlueprint);
-	Hide();
+	if (ViewModel) ViewModel->UpgradeRequested();
+	BuildingPanel->Hide();
+}
+
+void UBuildingControlUI::HandleDemolishButtonPressed()
+{
+	if (ViewModel) ViewModel->DemolishRequested();
+	BuildingPanel->Hide();
 }

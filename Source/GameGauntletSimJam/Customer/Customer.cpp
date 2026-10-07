@@ -51,5 +51,5 @@ void ACustomer::SetExit(AActor* NewExitActor, const FVector& NewExitLocation)
 
 void ACustomer::HandleShoppingFinished(AShop* Shop)
 {
-	if (FMath::FRand() < PurchaseChance) OnPurchasedFromShop.Broadcast(Shop->ItemCost);
+	if (FMath::FRand() < PurchaseChance) OnPurchasedFromShop.Broadcast(Shop->GetItemCost());
 }

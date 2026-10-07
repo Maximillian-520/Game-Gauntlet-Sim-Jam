@@ -17,14 +17,27 @@ void AShop::BeginPlay()
 	
 }
 
-// Called every frame
 void AShop::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-FVector AShop::GetStandingLocation()
+void AShop::Upgrade()
+{
+	Super::Upgrade();
+}
+
+FVector AShop::GetStandingLocation() const
 {
 	return StandingMarker ? StandingMarker->GetComponentLocation() : GetActorLocation();
+}
+
+int32 AShop::GetItemCost() const
+{
+	if (ItemCosts.Num() <= 0) return 0;
+
+	int32 Index = FMath::Min(Level, ItemCosts.Num());
+	
+	return ItemCosts[Index - 1];
 }
