@@ -26,7 +26,7 @@ void ABuildingVisibleTrigger::OnBeginOverlap(UPrimitiveComponent* OverlappedComp
         for (APlot* Plot : Plots)
         {
             ABaseBuilding* Building = Plot->Building;
-            if (!Building) return;
+            if (!Building) continue;
 
             Customer->SeeBuilding(Building);
         }

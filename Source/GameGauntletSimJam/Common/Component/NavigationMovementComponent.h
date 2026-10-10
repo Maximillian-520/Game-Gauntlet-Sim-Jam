@@ -5,7 +5,8 @@
 #include "BasicMovementComponent.h" // Erase if unused
 #include "NavigationMovementComponent.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPointReached);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovingStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovingStopped);
 
 /**
  * Actor movement using navigation system.
@@ -39,7 +40,7 @@ public:
 	// ==================================================
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MoveToPoint")
-	FVector FinalTargetlocation = FVector::ZeroVector;
+	FVector FinalTargetLocation = FVector::ZeroVector;
 
 	/** How close (in cm) is "close enough" to consider the point reached. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveToPoint")
@@ -48,6 +49,7 @@ public:
 	/** Computes a NavMesh path to TargetLocation, then follows it waypoint by waypoint. */
 	UFUNCTION(BlueprintCallable, Category = "MoveToPoint")
 	virtual void MoveToPoint(const FVector& TargetLocation);
+	void MoveToPoint(const FVector& TargetLocation, FRotator TargetRotation);
 
 	/** Cancels path following and the underlying point movement. */
 	UFUNCTION(BlueprintCallable, Category = "MoveToPoint")
@@ -60,19 +62,29 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "MoveToPoint")
 	FOnPointReached OnPointReached;
 
+	UPROPERTY(BlueprintAssignable, Category = "MoveToPoint")
+	FOnMovingStarted OnMovingStarted;
+
+	UPROPERTY(BlueprintAssignable, Category = "MoveToPoint")
+	FOnMovingStopped OnMovingStopped;
+
 protected:
 	virtual void BeginPlay() override;
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/** Runs the NavMesh query and kicks off following the resulting path. */
-	void RequestPath(const FVector& TargetLocation);
+	virtual void RequestPath(const FVector& TargetLocation);
 
 	/** Moves the path cursor forward and starts the next leg, or finishes if the path is done. */
-	void GoToNextWaypoint();
+	virtual void GoToNextWaypoint();
 
 protected:
 	FVector CurrentTargetlocation = FVector::ZeroVector;
 	TArray<FVector> CurrentPath;
 	int32 CurrentPathIndex = INDEX_NONE;
+	
+	FRotator FinalTargetRotation = FRotator::ZeroRotator;
+	
 	bool bIsMovingToPoint = false;
 };

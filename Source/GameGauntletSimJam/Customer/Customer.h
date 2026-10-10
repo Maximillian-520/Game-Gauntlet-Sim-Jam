@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Common/Component/NavigationMovementComponent.h"
+#include "../Common/Component/CrowdMovementComponent.h"
 #include "CustomerBehaviorComponent.h"
 #include "Customer.generated.h"
 
@@ -20,10 +20,10 @@ public:
 	//           Component
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	UNavigationMovementComponent* NavigationMovementComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UCrowdMovementComponent* CrowdMovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UCustomerBehaviorComponent* CustomerBehaviorComponent;
 
 	// ==================================================
@@ -61,6 +61,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
 	virtual void Tick(float DeltaTime) override;
 
 private:

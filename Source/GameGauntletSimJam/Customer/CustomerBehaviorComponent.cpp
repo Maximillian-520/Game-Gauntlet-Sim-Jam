@@ -16,15 +16,15 @@ void UCustomerBehaviorComponent::BeginPlay()
 		return;
 	}
 
-	NavMovement = Owner->FindComponentByClass<UNavigationMovementComponent>();
-	if (!NavMovement)
+	MovementComponent = Owner->FindComponentByClass<UCrowdMovementComponent>();
+	if (!MovementComponent)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s: no UNavigationMovementComponent found, disabling."), *GetNameSafe(Owner));
 		State = EBehaviorState::Disabled;
 		SetComponentTickEnabled(false);
 		return;
 	}
-	NavMovement->OnPointReached.AddDynamic(this, &UCustomerBehaviorComponent::HandlePointReached);
+	MovementComponent->OnPointReached.AddDynamic(this, &UCustomerBehaviorComponent::HandlePointReached);
 
 	// Initialize to idle state
 	State = EBehaviorState::Idle;
@@ -53,22 +53,22 @@ void UCustomerBehaviorComponent::ChangeState(EBehaviorState NewState)
 
 void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 {
-	if (!NavMovement) return;
+	if (!MovementComponent) return;
 
 	switch (EnterState)
 	{
 		case EBehaviorState::Idle:
-			NavMovement->StopMovingToPoint();
+			MovementComponent->StopMovingToPoint();
 			break;
 
 		case EBehaviorState::Strolling:
-			NavMovement->MoveToPoint(ExitLocation);
+			MovementComponent->MoveToPoint(ExitLocation);
 			break;
 
 		case EBehaviorState::Shopping:
 			if (TargetShop)
 			{
-				NavMovement->MoveToPoint(TargetShop->GetStandingLocation());
+				MovementComponent->MoveToPoint(TargetShop->GetStandingLocation(), TargetShop->GetStandingDirection());
 				bHasReachedShop = false;
 				ShopPeekTimer = FMath::FRandRange(MinPeekingDuration, MaxPeekingDuration);
 			}
@@ -76,13 +76,13 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 			break;
 
 		case EBehaviorState::MakingWay:
-			NavMovement->MoveToPoint(MakeWayLocation);
+			MovementComponent->MoveToPoint(MakeWayLocation);
 			bHasMadeWay = false;
 			MakeWayPatienceTimer = FMath::FRandRange(MinPatienceDuration, MaxPatienceDuration);
 			break;
 
 		case EBehaviorState::Disabled:
-			NavMovement->StopMovingToPoint();
+			MovementComponent->StopMovingToPoint();
 			SetComponentTickEnabled(false);
 			break;
 	}
@@ -90,12 +90,12 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 
 void UCustomerBehaviorComponent::ExitState(EBehaviorState ExitState)
 {
-	if (!NavMovement) return;
+	if (!MovementComponent) return;
 
 	switch (ExitState)
 	{
 		case EBehaviorState::Strolling:
-			NavMovement->StopMovingToPoint();
+			MovementComponent->StopMovingToPoint();
 			break;
 
 		case EBehaviorState::Shopping:
@@ -113,7 +113,7 @@ void UCustomerBehaviorComponent::ExitState(EBehaviorState ExitState)
 
 void UCustomerBehaviorComponent::UpdateState(float DeltaTime)
 {
-	if (!NavMovement) return;
+	if (!MovementComponent) return;
 
 	switch (State)
 	{
@@ -191,6 +191,7 @@ void UCustomerBehaviorComponent::HandlePointReached()
 		case EBehaviorState::Shopping:
 			// Arrived at the shop.
 			bHasReachedShop = true;
+			MovementComponent->StopMovingToPoint();
 			break;
 
 		case EBehaviorState::MakingWay:

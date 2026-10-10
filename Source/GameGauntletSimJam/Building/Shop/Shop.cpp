@@ -4,8 +4,8 @@ AShop::AShop()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	StandingMarker = CreateDefaultSubobject<USceneComponent>(TEXT("StandingMarker"));
-	if (Root) StandingMarker->SetupAttachment(Root);
+	StandingArea = CreateDefaultSubobject<UBoxComponent>(TEXT("StandingArea"));
+	if (Root) StandingArea->SetupAttachment(Root);
 }
 
 void AShop::BeginPlay()
@@ -28,7 +28,15 @@ void AShop::Upgrade()
 
 FVector AShop::GetStandingLocation() const
 {
-	return StandingMarker ? StandingMarker->GetComponentLocation() : GetActorLocation();
+	return GetRandomPointInArea(StandingArea);
+}
+
+FRotator AShop::GetStandingDirection() const
+{
+	FRotator ReturnRotation = GetActorRotation();
+	ReturnRotation.Yaw += 180.f;
+	ReturnRotation.Normalize();
+	return ReturnRotation;
 }
 
 int32 AShop::GetItemCost() const
@@ -38,4 +46,20 @@ int32 AShop::GetItemCost() const
 	int32 Index = FMath::Min(Level, ItemCosts.Num());
 	
 	return ItemCosts[Index - 1];
+}
+
+FVector AShop::GetRandomPointInArea(const UBoxComponent* Area) const
+{
+	if (!Area) return GetActorLocation();
+
+	const FVector Extent = Area->GetUnscaledBoxExtent();
+
+	// Random point in the local X/Y plane (Z = 0 keeps it flat)
+	const FVector LocalPoint(
+		FMath::FRandRange(-Extent.X, Extent.X),
+		FMath::FRandRange(-Extent.Y, Extent.Y),
+		0.f);
+
+	// Converts to world space, respecting the component's location, rotation and scale
+	return Area->GetComponentTransform().TransformPosition(LocalPoint);
 }

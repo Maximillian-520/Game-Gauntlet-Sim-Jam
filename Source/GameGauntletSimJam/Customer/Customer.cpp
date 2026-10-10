@@ -4,8 +4,8 @@ ACustomer::ACustomer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	NavigationMovementComponent = CreateDefaultSubobject<UNavigationMovementComponent>(TEXT("Navigation Movement"));
-	CustomerBehaviorComponent = CreateDefaultSubobject<UCustomerBehaviorComponent>(TEXT("Customer Behavior"));
+	CrowdMovementComponent = CreateDefaultSubobject<UCrowdMovementComponent>(TEXT("CrowdMovement"));
+	CustomerBehaviorComponent = CreateDefaultSubobject<UCustomerBehaviorComponent>(TEXT("CustomerBehavior"));
 }
 
 void ACustomer::BeginPlay()

@@ -2,17 +2,22 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "../Common/Component/NavigationMovementComponent.h"
+#include "../Common/Component/CrowdMovementComponent.h"
 #include "../Building/Shop/Shop.h"
 #include "CustomerBehaviorComponent.generated.h"
 
 UENUM(BlueprintType)
 enum class EBehaviorState : uint8
 {
+	/** Default idle state */
 	Idle        UMETA(DisplayName = "Idle"),
+	/** Strolling the market towards intended exit */
 	Strolling   UMETA(DisplayName = "Strolling"),
+	/** Going and shopping in target shop */
 	Shopping	UMETA(DisplayName = "Shopping"),
+	/** Find nearest exit (not to exit) to make way for train */
 	MakingWay	UMETA(DisplayName = "MakingWay"),
+	/** Disabled state */
 	Disabled    UMETA(Hidden)
 };
 
@@ -27,7 +32,7 @@ public:
 	UCustomerBehaviorComponent();
 
 	UPROPERTY()
-	TObjectPtr<UNavigationMovementComponent> NavMovement;
+	TObjectPtr<UCrowdMovementComponent> MovementComponent;
 
 	// ==================================================
 	//           State
@@ -76,6 +81,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// ==================================================

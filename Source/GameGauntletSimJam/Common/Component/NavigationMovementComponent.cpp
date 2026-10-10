@@ -46,9 +46,13 @@ void UNavigationMovementComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	}
 
 	// --- Rotate to face movement ----
-	if (bRotateToFaceMovement && !Direction.IsNearlyZero())
+	if (bRotateToFaceMovement)
 	{
-		const FRotator TargetRotation = Direction.Rotation();
+		// Set target rotation
+		FRotator TargetRotation;
+		if (bIsMovingToPoint) TargetRotation = Direction.Rotation();
+		else TargetRotation = FinalTargetRotation;
+		// Rotate
 		const FRotator NewRotation = FMath::RInterpConstantTo(
 			Owner->GetActorRotation(),
 			TargetRotation,
@@ -60,8 +64,17 @@ void UNavigationMovementComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UNavigationMovementComponent::MoveToPoint(const FVector& TargetLocation)
 {
-	FinalTargetlocation = TargetLocation;
+	FinalTargetLocation = TargetLocation;
 	bIsMovingToPoint = true;
+	OnMovingStarted.Broadcast();
+	RequestPath(TargetLocation);
+}
+void UNavigationMovementComponent::MoveToPoint(const FVector& TargetLocation, FRotator TargetRotation)
+{
+	FinalTargetLocation = TargetLocation;
+	FinalTargetRotation = TargetRotation;
+	bIsMovingToPoint = true;
+	OnMovingStarted.Broadcast();
 	RequestPath(TargetLocation);
 }
 
@@ -70,6 +83,7 @@ void UNavigationMovementComponent::StopMovingToPoint()
 	CurrentPath.Reset();
 	CurrentPathIndex = INDEX_NONE;
 	bIsMovingToPoint = false;
+	OnMovingStopped.Broadcast();
 }
 
 void UNavigationMovementComponent::RequestPath(const FVector& TargetLocation)

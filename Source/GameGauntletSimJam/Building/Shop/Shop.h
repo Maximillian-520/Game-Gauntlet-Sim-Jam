@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "../BaseBuilding.h"
-#include "Engine/TargetPoint.h"
+#include "Components/BoxComponent.h"
 #include "Shop.generated.h"
 
 UCLASS()
@@ -19,6 +19,9 @@ public:
 	FVector GetStandingLocation() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Shop")
+	FRotator GetStandingDirection() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Shop")
 	int32 GetItemCost() const;
 
 protected:
@@ -27,10 +30,12 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
-	TObjectPtr<USceneComponent> StandingMarker;
+	TObjectPtr<UBoxComponent> StandingArea;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
 	TArray<int32> ItemCosts = TArray<int32>{10};
+
+	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
 
 private:
 };
