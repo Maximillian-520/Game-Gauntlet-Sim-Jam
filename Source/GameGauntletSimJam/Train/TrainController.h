@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../Common/Manager/GameManager.h"
 #include "../Common/Manager/TrackerManager.h"
 #include "TrainSpawner.h"
 #include "TrainController.generated.h"
@@ -84,6 +85,11 @@ protected:
 	void CheckTrainPassQueue();
 
 private:
+	UPROPERTY()
+	UGameManager* GameManager = nullptr;
+	UPROPERTY()
+	UTrackerManager* TrackerManager = nullptr;
+
 	UPROPERTY(VisibleAnywhere, Category = "Controller")
 	int32 TrainCount = 0;
 	TArray<ATrain*> Trains;

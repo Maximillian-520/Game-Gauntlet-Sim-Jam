@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MoneyUI.h"
+#include "LoseUI.h"
 #include "CustomerControlUI.h"
 #include "TrainControlUI.h"
 #include "BuildingControlUI.h"
@@ -16,17 +17,8 @@ class GAMEGAUNTLETSIMJAM_API AGameUIController : public AActor
 public:	
 	AGameUIController();
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UMoneyUI> MoneyUIBlueprint;
-
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UCustomerControlUI> CustomerControlUIBlueprint;
-
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UTrainControlUI> TrainControlUIBlueprint;
-
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UBuildingControlUI> BuildingControlUIBlueprint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TArray<TSubclassOf<UUserWidget>> UISpawnBlueprints;
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,9 +26,6 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	UMoneyUI* MoneyUI;
-	UCustomerControlUI* CustomerControlUI;
-	UTrainControlUI* TrainControlUI;
-	UBuildingControlUI* BuildingControlUI;
+	TArray<UUserWidget*> UIs;
 
 };

@@ -12,66 +12,23 @@ void AGameUIController::BeginPlay()
 	Super::BeginPlay();
 
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+    if (!PC) return;
 
-    if (MoneyUIBlueprint)
+    for (TSubclassOf<UUserWidget> UIBlueprint : UISpawnBlueprints)
     {
-        if (PC)
+        UUserWidget* UI = CreateWidget<UUserWidget>(PC, UIBlueprint);
+        if (UI)
         {
-            MoneyUI = CreateWidget<UMoneyUI>(PC, MoneyUIBlueprint);
-            if (MoneyUI) MoneyUI->AddToViewport();
-        }
-    }
-
-    if (CustomerControlUIBlueprint)
-    {
-        if (PC)
-        {
-            CustomerControlUI = CreateWidget<UCustomerControlUI>(PC, CustomerControlUIBlueprint);
-            if (CustomerControlUI) CustomerControlUI->AddToViewport();
-        }
-    }
-
-    if (TrainControlUIBlueprint)
-    {
-        if (PC)
-        {
-            TrainControlUI = CreateWidget<UTrainControlUI>(PC, TrainControlUIBlueprint);
-            if (TrainControlUI) TrainControlUI->AddToViewport();
-        }
-    }
-
-    if (BuildingControlUIBlueprint)
-    {
-        if (PC)
-        {
-            BuildingControlUI = CreateWidget<UBuildingControlUI>(PC, BuildingControlUIBlueprint);
-            if (BuildingControlUI) BuildingControlUI->AddToViewport();
+            UI->AddToViewport();
+            UIs.Add(UI);
         }
     }
 }
 
 void AGameUIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    if (MoneyUI)
-    {
-        MoneyUI->RemoveFromParent();
-        MoneyUI = nullptr;
-    }
-    if (CustomerControlUI)
-    {
-        CustomerControlUI->RemoveFromParent();
-        CustomerControlUI = nullptr;
-    }
-    if (TrainControlUI)
-    {
-        TrainControlUI->RemoveFromParent();
-        TrainControlUI = nullptr;
-    }
-    if (BuildingControlUI)
-    {
-        BuildingControlUI->RemoveFromParent();
-        BuildingControlUI = nullptr;
-    }
+    for (UUserWidget* UI : UIs) UI->RemoveFromParent();
+    UIs.Empty();
 
     Super::EndPlay(EndPlayReason);
 }

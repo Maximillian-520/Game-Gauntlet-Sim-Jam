@@ -1,5 +1,4 @@
 #include "TrainController.h"
-#include "Kismet/GameplayStatics.h" // Temp
 
 ATrainController::ATrainController()
 {
@@ -11,11 +10,13 @@ void ATrainController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
+	if (!GameManager) return;
+	TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance());
+	if (!TrackerManager) return;
+
+	TrackerManager->OnTrackIntervalChanged.AddDynamic(this, &ATrainController::HandleTrackIntervalChanged);
 	TrainSpawner->OnTrainSpawned.AddDynamic(this, &ATrainController::HandleTrainSpawned);
-	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
-	{
-		TrackerManager->OnTrackIntervalChanged.AddDynamic(this, &ATrainController::HandleTrackIntervalChanged);
-	}
 }
 
 void ATrainController::Tick(float DeltaTime)
@@ -30,7 +31,6 @@ void ATrainController::Tick(float DeltaTime)
 
 void ATrainController::UpdateTrainTrackInterval()
 {
-	UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance());
 	if (!TrackerManager) return;
 
 	for (ATrain* Train : Trains)
@@ -77,10 +77,7 @@ void ATrainController::HandleTrainSpawned(ATrain* Train)
 	Train->OnTrainHitCustomer.AddDynamic(this, &ATrainController::HandleTrainHitCustomer);
 	Train->OnDestroyed.AddDynamic(this, &ATrainController::HandleTrainDestroyed);
 	
-	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
-	{
-		Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
-	}
+	if (TrackerManager) Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
 
 	Trains.Add(Train);
 	TrainCount++;
@@ -126,8 +123,7 @@ void ATrainController::HandleTrainArrived(ATrain* Train)
 
 void ATrainController::HandleTrainHitCustomer(ACustomer* HitCustomer)
 {
-	// Temp
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	if (GameManager) GameManager->GameLost();
 }
 
 void ATrainController::HandleTrainDestroyed(AActor* DestroyedActor)
