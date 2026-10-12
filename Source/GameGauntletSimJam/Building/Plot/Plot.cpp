@@ -6,6 +6,8 @@ APlot::APlot()
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(Root);
+	BuildingRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BuildingRoot"));
+	BuildingRoot->SetupAttachment(Root);
 
 	ClickArea = CreateDefaultSubobject<UBoxComponent>(TEXT("ClickArea"));
 	ClickArea->SetupAttachment(Root);
@@ -34,8 +36,16 @@ ABaseBuilding* APlot::BuildBuilding(TSubclassOf<ABaseBuilding> BuildingBlueprint
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	Building = GetWorld()->SpawnActor<ABaseBuilding>(
-		BuildingBlueprint, GetActorTransform(), Params
+		BuildingBlueprint, BuildingRoot->GetComponentTransform(), Params
 	);
+
+	if (Building)
+	{
+		Building->AttachToComponent(
+			BuildingRoot,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale
+		);
+	}
 
 	SetPlot();
 
@@ -49,7 +59,7 @@ void APlot::UpgradeBuilding()
 	{
 		Building->Upgrade();
 
-		OnBuildingChanged.Broadcast(nullptr);
+		OnBuildingChanged.Broadcast(Building);
 	}
 
 	SetPlot();
@@ -59,12 +69,24 @@ void APlot::DemolishBuilding()
 {
 	if (Building)
 	{
-		Building->Destroy();
+		DestoryedBuilding = Building;
 		Building = nullptr;
 		OnBuildingChanged.Broadcast(nullptr);
+		OnBuildingDestoryed.Broadcast();
 	}
 
 	SetPlot();
+}
+
+void APlot::DestroyBuilding()
+{
+	if (DestoryedBuilding)
+	{
+		DestoryedBuilding->Destroy();
+		DestoryedBuilding = nullptr;
+
+		BuildingRoot->SetRelativeScale3D(FVector::OneVector);
+	}
 }
 
 void APlot::SetPlot()

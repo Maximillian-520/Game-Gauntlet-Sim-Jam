@@ -25,8 +25,17 @@ void ACustomerController::StartMakingWay()
     {
         if (!Customer) continue;
 
+		//if (!Customer->IsActive()) continue;
+
         UBoxComponent* SpawnArea = CustomerSpawner->GetNearestSpawnArea(Customer->GetActorLocation());
-        if (SpawnArea) Customer->MakeWay(SpawnArea->GetOwner(), CustomerSpawner->GetRandomPointInArea(SpawnArea));
+        if (SpawnArea)
+		{
+			Customer->MakeWay(
+				SpawnArea->GetOwner(),
+				CustomerSpawner->GetRandomPointInArea(SpawnArea),
+				SpawnArea->GetOwner()->GetActorRotation()
+			);
+		}
     }
 
 	CustomerSpawner->StopSpawning();

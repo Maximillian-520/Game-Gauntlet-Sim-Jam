@@ -62,7 +62,7 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 			break;
 
 		case EBehaviorState::Strolling:
-			MovementComponent->MoveToPoint(ExitLocation);
+			MovementComponent->MoveToPoint(ExitLocation, ExitRotation);
 			break;
 
 		case EBehaviorState::Shopping:
@@ -76,7 +76,7 @@ void UCustomerBehaviorComponent::EnterState(EBehaviorState EnterState)
 			break;
 
 		case EBehaviorState::MakingWay:
-			MovementComponent->MoveToPoint(MakeWayLocation);
+			MovementComponent->MoveToPoint(MakeWayLocation, MakeWayRotation);
 			bHasMadeWay = false;
 			MakeWayPatienceTimer = FMath::FRandRange(MinPatienceDuration, MaxPatienceDuration);
 			break;
@@ -146,10 +146,13 @@ void UCustomerBehaviorComponent::UpdateState(float DeltaTime)
 //           Strolling
 // ==================================================
 
-void UCustomerBehaviorComponent::SetExit(AActor* NewExitActor, const FVector& NewExitLocation)
+void UCustomerBehaviorComponent::SetExit(
+	AActor* NewExitActor, const FVector& NewExitLocation, const FRotator& NewExitRotation
+)
 {
 	ExitActor = NewExitActor;
 	ExitLocation = NewExitLocation;
+	ExitRotation = NewExitRotation;
 }
 
 // ==================================================
@@ -167,10 +170,13 @@ void UCustomerBehaviorComponent::GoToShop(AShop* Shop)
 //           Making Way
 // ==================================================
 
-void UCustomerBehaviorComponent::DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation)
+void UCustomerBehaviorComponent::DoMakeWay(
+	AActor* NewMakeWayActor, const FVector& NewMakeWayLocation, const FRotator& NewMakeWayRotation
+)
 {
 	MakeWayActor = NewMakeWayActor;
 	MakeWayLocation = NewMakeWayLocation;
+	MakeWayRotation = NewMakeWayRotation;
 
 	ChangeState(EBehaviorState::MakingWay);
 }
@@ -185,7 +191,7 @@ void UCustomerBehaviorComponent::HandlePointReached()
 	{
 		case EBehaviorState::Strolling:
 			// Reached the exit, customer is done.
-			if (AActor* Owner = GetOwner()) Owner->Destroy();
+			OnCustomerExited.Broadcast();
 			break;
 
 		case EBehaviorState::Shopping:

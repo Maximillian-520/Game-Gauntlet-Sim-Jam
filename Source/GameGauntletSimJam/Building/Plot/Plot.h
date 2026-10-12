@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlotClicked, APlot*, Plot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingChanged, ABaseBuilding*, NewBuilding);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingDestoryed);
 
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API APlot : public AActor
@@ -41,10 +42,13 @@ public:
 	void DemolishBuilding();
 
 	UPROPERTY(BlueprintAssignable, Category = "Plot")
+	FOnPlotClicked OnPlotClicked;
+
+	UPROPERTY(BlueprintAssignable, Category = "Plot")
 	FOnBuildingChanged OnBuildingChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "Plot")
-	FOnPlotClicked OnPlotClicked;
+	FOnBuildingDestoryed OnBuildingDestoryed;
 
 protected:
 	virtual void NotifyActorOnClicked(FKey ButtonPressed) override;
@@ -53,10 +57,16 @@ protected:
 	TObjectPtr<USceneComponent> Root;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Plot")
+	TObjectPtr<USceneComponent> BuildingRoot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Plot")
 	TObjectPtr<UBoxComponent> ClickArea;
+
+	UFUNCTION(BlueprintCallable)
+	void DestroyBuilding();
 
 	void SetPlot();
 
 private:
-
+	ABaseBuilding* DestoryedBuilding = nullptr;
 };

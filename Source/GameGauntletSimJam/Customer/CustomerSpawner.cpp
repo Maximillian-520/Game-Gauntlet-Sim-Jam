@@ -70,6 +70,7 @@ void ACustomerSpawner::SpawnCustomer()
 
         AActor* ExitActor = this;
         FVector ExitLocation = GetActorLocation();
+        FRotator ExitRotation = GetActorRotation();
 
         // --- Pick a random exit from any other spawn area ---
         TArray<UBoxComponent*> ExitCandidates;
@@ -85,8 +86,14 @@ void ACustomerSpawner::SpawnCustomer()
 
         if (ExitCandidates.Num() > 0)
         {
+            // Get random exit
             UBoxComponent* ExitBox = ExitCandidates[FMath::RandRange(0, ExitCandidates.Num() - 1)];
+            // Set exit location
             ExitLocation = GetRandomPointInArea(ExitBox);
+            // Set exit rotation
+            ExitRotation = ExitBox->GetOwner()->GetActorRotation();
+            ExitRotation.Yaw += 180.f;
+            ExitRotation.Normalize();
         }
 
         // --- Spawn and set new instance ---
@@ -98,7 +105,7 @@ void ACustomerSpawner::SpawnCustomer()
 
         if (CustomerInstance)
         {
-            CustomerInstance->SetExit(ExitActor, ExitLocation);
+            CustomerInstance->SetExit(ExitActor, ExitLocation, ExitRotation);
             OnCustomerSpawned.Broadcast(CustomerInstance);
         }
     }

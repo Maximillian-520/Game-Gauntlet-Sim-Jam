@@ -21,6 +21,7 @@ enum class EBehaviorState : uint8
 	Disabled    UMETA(Hidden)
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCustomerExited);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShoppingFinished, AShop*, Shop);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -38,46 +39,50 @@ public:
 	//           State
 	// ==================================================
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Behavior")
 	EBehaviorState State = EBehaviorState::Idle;
 
-	UFUNCTION(BlueprintCallable, Category = "State")
+	UFUNCTION(BlueprintCallable, Category = "Behavior")
 	void ChangeState(EBehaviorState NewState);
 
 	// ==================================================
 	//           Strolling
 	// ==================================================
 
-	void SetExit(AActor* NewExitActor, const FVector& NewExitLocation);
+	UFUNCTION(BlueprintCallable, Category = "Behavior|Strolling")
+	void SetExit(AActor* NewExitActor, const FVector& NewExitLocation, const FRotator& NewExitRotation);
+
+	UPROPERTY(BlueprintAssignable, Category = "Behavior|Strolling")
+	FOnCustomerExited OnCustomerExited;
 
 	// ==================================================
 	//           Shopping
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shopping")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior|Shopping")
 	float MinPeekingDuration = 1.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shopping")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior|Shopping")
 	float MaxPeekingDuration = 3.0f;
 
-	UFUNCTION(BlueprintCallable, Category = "Shopping")
+	UFUNCTION(BlueprintCallable, Category = "Behavior|Shopping")
 	void GoToShop(AShop* Shop);
 
-	UPROPERTY(BlueprintAssignable, Category = "Shopping")
+	UPROPERTY(BlueprintAssignable, Category = "Behavior|Shopping")
 	FOnShoppingFinished OnShoppingFinished;
 
 	// ==================================================
 	//           Making Way
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Making Way")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior|Making Way")
 	float MinPatienceDuration = 5.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Making Way")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior|Making Way")
 	float MaxPatienceDuration = 15.0f;
 
-	UFUNCTION(BlueprintCallable, Category = "Making Way")
-	void DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation);
+	UFUNCTION(BlueprintCallable, Category = "Behavior|Making Way")
+	void DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation, const FRotator& NewMakeWayRotation);
 
 protected:
 	virtual void BeginPlay() override;
@@ -105,6 +110,7 @@ private:
 	// Strolling
 	AActor* ExitActor;
 	FVector ExitLocation;
+	FRotator ExitRotation;
 	
 	// Shopping
 	TObjectPtr<AShop> TargetShop;
@@ -114,6 +120,7 @@ private:
 	// Making Way
 	AActor* MakeWayActor;
 	FVector MakeWayLocation;
+	FRotator MakeWayRotation;
 	bool bHasMadeWay = false;
 	float MakeWayPatienceTimer;
 

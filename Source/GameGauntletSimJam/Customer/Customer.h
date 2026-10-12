@@ -6,6 +6,7 @@
 #include "CustomerBehaviorComponent.h"
 #include "Customer.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCustomerDestroy);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPurchasedFromShop, int32, MoneySpent);
 
 UCLASS()
@@ -20,10 +21,10 @@ public:
 	//           Component
 	// ==================================================
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Customer|Component")
 	UCrowdMovementComponent* CrowdMovementComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Customer|Component")
 	UCustomerBehaviorComponent* CustomerBehaviorComponent;
 
 	// ==================================================
@@ -45,19 +46,28 @@ public:
 	void SeeBuilding(ABaseBuilding* Building);
 
 	UFUNCTION(BlueprintCallable, Category = "Customer")
-	void MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation);
+	void MakeWay(AActor* MakeWayActor, const FVector& MakeWayLocation, const FRotator& MakeWayRotation);
 	
 	UFUNCTION(BlueprintCallable, Category = "Customer")
-	void SetExit(AActor* NewExitActor, const FVector& NewExitLocation);
+	void SetExit(AActor* ExitActor, const FVector& ExitLocation, const FRotator& ExitRotation);
 
-	UPROPERTY(BlueprintAssignable, Category = "Customer")
-	FOnPurchasedFromShop OnPurchasedFromShop;
+	UFUNCTION(BlueprintCallable, Category = "Customer")
+	bool IsActive() { return bIsActive; }
 
 	// ==================================================
 	//           Event
 	// ==================================================
 	UFUNCTION()
+	void HandleCustomerExited();
+
+	UFUNCTION()
 	void HandleShoppingFinished(AShop* Shop);
+	
+	UPROPERTY(BlueprintAssignable, Category = "Customer|Event")
+	FOnCustomerDestroy OnCustomerDestroy;
+
+	UPROPERTY(BlueprintAssignable, Category = "Customer|Event")
+	FOnPurchasedFromShop OnPurchasedFromShop;
 
 protected:
 	virtual void BeginPlay() override;
@@ -65,6 +75,5 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	FVector ExitLocation;
-
+	bool bIsActive = true;
 };

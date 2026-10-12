@@ -12,6 +12,7 @@ void ACustomer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CustomerBehaviorComponent->OnCustomerExited.AddDynamic(this, &ACustomer::HandleCustomerExited);
 	CustomerBehaviorComponent->OnShoppingFinished.AddDynamic(this, &ACustomer::HandleShoppingFinished);
 
 	GetWorld()->GetTimerManager().SetTimerForNextTick(
@@ -39,14 +40,20 @@ void ACustomer::SeeBuilding(ABaseBuilding* Building)
 	}
 }
 
-void ACustomer::MakeWay(AActor* NewMakeWayActor, const FVector& MakeWayLocation)
+void ACustomer::MakeWay(AActor* MakeWayActor, const FVector& MakeWayLocation, const FRotator& MakeWayRotation)
 {
-	CustomerBehaviorComponent->DoMakeWay(NewMakeWayActor, MakeWayLocation);
+	CustomerBehaviorComponent->DoMakeWay(MakeWayActor, MakeWayLocation, MakeWayRotation);
 }
 
-void ACustomer::SetExit(AActor* NewExitActor, const FVector& NewExitLocation)
+void ACustomer::SetExit(AActor* ExitActor, const FVector& ExitLocation, const FRotator& ExitRotation)
 {
-	CustomerBehaviorComponent->SetExit(NewExitActor, NewExitLocation);
+	CustomerBehaviorComponent->SetExit(ExitActor, ExitLocation, ExitRotation);
+}
+
+void ACustomer::HandleCustomerExited()
+{
+	bIsActive = false;
+	OnCustomerDestroy.Broadcast();
 }
 
 void ACustomer::HandleShoppingFinished(AShop* Shop)
