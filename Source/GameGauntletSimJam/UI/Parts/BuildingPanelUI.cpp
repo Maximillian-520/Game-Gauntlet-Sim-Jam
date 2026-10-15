@@ -6,11 +6,12 @@ void UBuildingPanelUI::NativeOnInitialized()
 
 	MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance());
 
-	CloseButton->OnClicked.AddDynamic(this, &UBuildingPanelUI::Hide);
-	UpgradeButton->OnClicked.AddDynamic(this, &UBuildingPanelUI::HandleUpgradeButtonPressed);
-	DemolishButton->OnClicked.AddDynamic(this, &UBuildingPanelUI::HandleDemolishButtonPressed);
+	CloseButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::BroadcastOnCloseButtonPressed);
+	UpgradeButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::HandleUpgradeButtonPressed);
+	DemolishButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::HandleDemolishButtonPressed);
 	if (MoneyManager) MoneyManager->OnMoneyChanged.AddDynamic(this, &UBuildingPanelUI::HandleMoneyChanged);
 
+	CloseButton->SetButtonText(FText::FromString(CloseText));
 	Hide();
 }
 
@@ -27,28 +28,22 @@ void UBuildingPanelUI::Show(int32 PlotNumber, ABaseBuilding* Building)
 	LevelText->SetText(FText::FromString(FormattedLevelText));
 
 	// Setup upgrade
-	if (UpgradeCostText)
+	if (Building->IsMaxLevel())
 	{
-		if (Building->IsMaxLevel())
-		{
-			UpgradeCostText->SetText(FText::FromString("Max Level"));
-			UpgradeButton->SetIsEnabled(false);
-		}
-		else
-		{
-			UpgradeCost = Building->GetUpgradeCost();
-			const FString FormattedCostText = FString::Printf(TEXT("-$%d"), UpgradeCost);
-			UpgradeCostText->SetText(FText::FromString(FormattedCostText));
-		}
+		UpgradeButton->SetButtonText(FText::FromString(MaxLevelText));
+		UpgradeButton->SetIsEnabled(false);
+	}
+	else
+	{
+		UpgradeCost = Building->GetUpgradeCost();
+		const FString FormattedCostText = FString::Printf(TEXT("-$%d"), UpgradeCost);
+		UpgradeButton->SetButtonText(FText::FromString(FormattedCostText));
 	}
 
 	// Setup demolish
-	if (DemolishValueText)
-	{
-		const int32 DemolishValue = Building->GetDemolishValue();
-		const FString FormattedValueText = FString::Printf(TEXT("+$%d"), DemolishValue);
-		DemolishValueText->SetText(FText::FromString(FormattedValueText));
-	}
+	const int32 DemolishValue = Building->GetDemolishValue();
+	const FString FormattedValueText = FString::Printf(TEXT("+$%d"), DemolishValue);
+	DemolishButton->SetButtonText(FText::FromString(FormattedValueText));
 
 	CurrentBuilding = Building;
 	UpdatePanel();

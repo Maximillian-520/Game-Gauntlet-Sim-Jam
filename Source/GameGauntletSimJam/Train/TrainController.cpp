@@ -86,36 +86,23 @@ void ATrainController::HandleTrainSpawned(ATrain* Train)
 	if (TrainCount >= MaxTrainCount) TrainSpawner->StopSpawning();
 
 	FText TrainName = Train->GetTrainName();
-	FText TrainText = FText::Format(
-		INVTEXT("{0} {1} was spotted from {2}"),
-		Train->TrainType,
-		TrainName,
-		GetFormatedDistanceText(Train->GetTrainRemainingDistance())
+	BroadcastOnNotificationRequested(
+		Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
 	);
-	BroadcastOnNotificationRequested(TrainName, TrainText);
 }
 
 void ATrainController::HandleTrainTravelUpdate(ATrain* Train)
 {
 	FText TrainName = Train->GetTrainName();
-	FText TrainText = FText::Format(
-		INVTEXT("{0} {1} is closing in at {2}"),
-		Train->TrainType,
-		TrainName,
-		GetFormatedDistanceText(Train->GetTrainRemainingDistance())
+	BroadcastOnNotificationRequested(
+		Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
 	);
-	BroadcastOnNotificationRequested(TrainName, TrainText);
 }
 
 void ATrainController::HandleTrainArrived(ATrain* Train)
 {
 	FText TrainName = Train->GetTrainName();
-	FText TrainText = FText::Format(
-		INVTEXT("{0} {1} has arrived"),
-		Train->TrainType,
-		TrainName
-	);
-	BroadcastOnNotificationRequested(TrainName, TrainText);
+	BroadcastOnNotificationRequested(Train->TrainType, TrainName, FText::FromString("Arrived"));
 
 	TrainPassQueue.Add(Train);
 	CheckTrainPassQueue();

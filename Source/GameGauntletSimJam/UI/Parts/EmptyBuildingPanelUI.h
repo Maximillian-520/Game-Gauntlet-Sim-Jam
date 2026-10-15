@@ -3,9 +3,9 @@
 #include "CoreMinimal.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "../../Building/BaseBuilding.h"
+#include "../../UI/Component/BasicButton.h"
 #include "../../Common/Manager/MoneyManager.h"
 #include "EmptyBuildingPanelUI.generated.h"
 
@@ -15,6 +15,8 @@ UCLASS()
 class GAMEGAUNTLETSIMJAM_API UEmptyBuildingPanelUI : public UUserWidget
 {
 	GENERATED_BODY()
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseButtonPressed);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -29,8 +31,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnBuildButtonPressed OnBuildButtonPressed;
 
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnCloseButtonPressed OnCloseButtonPressed;
+	UFUNCTION()
+	void BroadcastOnCloseButtonPressed() { OnCloseButtonPressed.Broadcast(); }
+
 protected:
 	virtual void NativeOnInitialized();
+
+	const FString CloseText = "Close";
 
 	// ==================================================
 	//           Main
@@ -40,17 +49,14 @@ protected:
 	TObjectPtr<UTextBlock> BuildingText;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> CloseButton;
+	TObjectPtr<UBasicButton> CloseButton;
 
 	// ==================================================
 	//           Shop
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BuildShopButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> ShopCostText;
+	TObjectPtr<UBasicButton> BuildShopButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<ABaseBuilding> ShopBlueprint;
@@ -60,10 +66,7 @@ protected:
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> BuildTrackerButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> TrackerCostText;
+	TObjectPtr<UBasicButton> BuildTrackerButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<ABaseBuilding> TrackerBlueprint;

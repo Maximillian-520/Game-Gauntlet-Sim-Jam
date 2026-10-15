@@ -3,9 +3,9 @@
 #include "CoreMinimal.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "../../Building/BaseBuilding.h"
+#include "../../UI/Component/BasicButton.h"
 #include "../../Common/Manager/MoneyManager.h"
 #include "BuildingPanelUI.generated.h"
 
@@ -16,6 +16,8 @@ UCLASS()
 class GAMEGAUNTLETSIMJAM_API UBuildingPanelUI : public UUserWidget
 {
 	GENERATED_BODY()
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseButtonPressed);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -33,8 +35,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnDemolishButtonPressed OnDemolishButtonPressed;
 
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnCloseButtonPressed OnCloseButtonPressed;
+	UFUNCTION()
+	void BroadcastOnCloseButtonPressed() { OnCloseButtonPressed.Broadcast(); }
+
 protected:
 	virtual void NativeOnInitialized();
+
+	const FString MaxLevelText = "Max";
+	const FString CloseText = "Close";
 
 	// ==================================================
 	//           Main
@@ -47,27 +57,21 @@ protected:
 	TObjectPtr<UTextBlock> LevelText;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> CloseButton;
+	TObjectPtr<UBasicButton> CloseButton;
 
 	// ==================================================
 	//           Upgrade
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> UpgradeButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> UpgradeCostText;
+	TObjectPtr<UBasicButton> UpgradeButton;
 
 	// ==================================================
 	//           Demolish
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> DemolishButton;
-
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> DemolishValueText;
+	TObjectPtr<UBasicButton> DemolishButton;
 
 	// ==================================================
 	//           Event

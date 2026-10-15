@@ -18,7 +18,7 @@ public:
 	TSubclassOf<UTrainNotificationUI> TrainNotificationUIBlueprint;
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	UTrainNotificationUI* SpawnOrUpdateNotification(const FText& TrainName, const FText& Message);
+	UTrainNotificationUI* SpawnOrUpdateNotification(const FText& TrainType, const FText& TrainName, const FText& Status);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveNotification(const FText& TrainName);
@@ -40,7 +40,7 @@ private:
 	TMap<FName, UTrainNotificationUI*> TrainNotificationMap;
 
 	UFUNCTION()
-	void HandleNotificationRequested(const FText& TrainName, const FText& Message);
+	void HandleNotificationRequested(const FText& TrainType, const FText& TrainName, const FText& Message);
 
 	UFUNCTION()
 	void HandleNotificationDeleted(const FText& TrainName);

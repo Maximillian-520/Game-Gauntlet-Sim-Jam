@@ -23,13 +23,17 @@ void UTrainControlUI::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-UTrainNotificationUI* UTrainControlUI::SpawnOrUpdateNotification(const FText& TrainName, const FText& Message)
+UTrainNotificationUI* UTrainControlUI::SpawnOrUpdateNotification(const FText& TrainType, const FText& TrainName, const FText& Status)
 {
 	UTrainNotificationUI* Notification = nullptr;
 	FName Key(*TrainName.ToString());
 
 	// Find existing one
 	if (TrainNotificationMap.Contains(Key)) Notification = TrainNotificationMap.FindRef(Key);
+
+
+	// Update if found
+	if (Notification) Notification->Update(Status);
 	// Create if not found
 	else if (TrainNotificationUIBlueprint || NotificationBox)
 	{
@@ -37,9 +41,8 @@ UTrainNotificationUI* UTrainControlUI::SpawnOrUpdateNotification(const FText& Tr
 		if (!Notification) return nullptr;
 		NotificationBox->AddChild(Notification);
 		TrainNotificationMap.Add(Key, Notification);
+		Notification->Show(TrainType, TrainName, Status);
 	}
-
-	if (Notification) Notification->SetMessage(Message);
 
 	return Notification;
 }
@@ -70,9 +73,9 @@ void UTrainControlUI::RemoveNotification(UTrainNotificationUI* Notification)
 	}
 }
 
-void UTrainControlUI::HandleNotificationRequested(const FText& TrainName, const FText& Message)
+void UTrainControlUI::HandleNotificationRequested(const FText& TrainType, const FText& TrainName, const FText& Message)
 {
-	SpawnOrUpdateNotification(TrainName, Message);
+	SpawnOrUpdateNotification(TrainType, TrainName, Message);
 }
 
 void UTrainControlUI::HandleNotificationDeleted(const FText& TrainName)

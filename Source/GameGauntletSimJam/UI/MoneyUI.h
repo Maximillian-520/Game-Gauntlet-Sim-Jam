@@ -8,9 +8,6 @@
 #include "../Common/Manager/MoneyManager.h"
 #include "MoneyUI.generated.h"
 
-class UTextBlock;
-class UMoneyManager;
-
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API UMoneyUI : public UUserWidget
 {
@@ -21,19 +18,12 @@ protected:
 
     virtual void NativeDestruct() override;
 
-    UPROPERTY(meta = (BindWidget))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
     UTextBlock* MoneyText;
 
-    UPROPERTY(meta = (BindWidgetOptional))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
     UTextBlock* DeltaText;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Money")
-    FText Prefix = FText::FromString(TEXT("$"));
-
-    UPROPERTY(EditDefaultsOnly, Category = "Money")
-    float DeltaDisplayTime = 1.5f;
-
-    // Lets you add animations/sounds in the Blueprint
     UFUNCTION(BlueprintImplementableEvent, Category = "Money")
     void OnMoneyChangedBP(int32 NewAmount, int32 Delta);
 
@@ -43,10 +33,6 @@ private:
 
     void UpdateMoneyText(int32 Amount);
 
-    void HideDeltaText();
-
     UPROPERTY()
     UMoneyManager* MoneyManager = nullptr;
-
-    FTimerHandle DeltaTimer;
 };

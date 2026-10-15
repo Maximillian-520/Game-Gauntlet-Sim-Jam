@@ -1,23 +1,22 @@
 #include "TrainNotificationUI.h"
 
-void UTrainNotificationUI::NativeConstruct()
+void UTrainNotificationUI::Show(const FText& TrainType, const FText& TrainName, const FText& Status)
 {
-	Super::NativeConstruct();
+	if (IncomingTrainText) IncomingTrainText->SetText(
+		FText::Format(INVTEXT("Incoming {0}: {1}"), TrainType, TrainName)
+	);
 
-	if (FadeAnim) PlayAnimation(FadeAnim, 0.f, 1, EUMGSequencePlayMode::Forward);
+	if (StatusText) StatusText->SetText(Status);
 }
 
-void UTrainNotificationUI::SetMessage(const FText& Message)
+void UTrainNotificationUI::Update(const FText& Status)
 {
-	if (MessageText) MessageText->SetText(Message);
+	if (StatusText) StatusText->SetText(Status);
+	OnNotificationUpdate.Broadcast();
 }
 
 void UTrainNotificationUI::Disappear()
 {
-	if (FadeAnim)
-	{
-		bIsMarkedForDestoy = true; // Destroy UI after animation finished in blueprint
-		PlayAnimation(FadeAnim, 0.f, 1, EUMGSequencePlayMode::Reverse);
-	}
+	if (bHasDisappearAnimation) OnNotificationDisappear.Broadcast();
 	else RemoveFromParent();
 }

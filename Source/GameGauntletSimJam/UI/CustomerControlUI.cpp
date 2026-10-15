@@ -18,23 +18,34 @@ void UCustomerControlUI::NativeConstruct()
 		View->SetViewModelByClass(ViewModel);
 	}
 
-	StartButton->OnClicked.AddDynamic(this, &UCustomerControlUI::OnStartClicked);
-	EndButton->OnClicked.AddDynamic(this, &UCustomerControlUI::OnEndClicked);
+	StartButton->OnButtonClicked.AddDynamic(this, &UCustomerControlUI::OnStartClicked);
+	EndButton->OnButtonClicked.AddDynamic(this, &UCustomerControlUI::OnEndClicked);
+
+	StartButton->SetButtonText(FText::FromString(MakeWayText));
+	StartButton->SetIsEnabled(true);
+	EndButton->SetButtonText(FText::FromString(LetInText));
+	EndButton->SetIsEnabled(false);
 }
 
 void UCustomerControlUI::NativeDestruct()
 {
-	StartButton->OnClicked.RemoveAll(this);
-	EndButton->OnClicked.RemoveAll(this);
+	StartButton->OnButtonClicked.RemoveAll(this);
+	EndButton->OnButtonClicked.RemoveAll(this);
 	Super::NativeDestruct();
 }
 
 void UCustomerControlUI::OnStartClicked()
 {
 	if (ViewModel) ViewModel->StartMakingWay();
+
+	StartButton->SetIsEnabled(false);
+	EndButton->SetIsEnabled(true);
 }
 
 void UCustomerControlUI::OnEndClicked()
 {
 	if (ViewModel) ViewModel->EndMakingWay();
+
+	StartButton->SetIsEnabled(true);
+	EndButton->SetIsEnabled(false);
 }

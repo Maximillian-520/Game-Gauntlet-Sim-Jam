@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,7 +8,8 @@
 #include "TimerManager.h"
 #include "TrainNotificationUI.generated.h"
 
-class UTextBlock;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNotificationUpdate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNotificationDisappear);
 
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API UTrainNotificationUI : public UUserWidget
@@ -16,22 +18,32 @@ class GAMEGAUNTLETSIMJAM_API UTrainNotificationUI : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void SetMessage(const FText& Message);
+	void Show(const FText& TrainType, const FText& TrainName, const FText& Status);
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void Update(const FText& Status);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void Disappear();
 
 protected:
-	virtual void NativeConstruct() override;
+	const FString IncomingText = "Incoming {0}: {1}";
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* MessageText;
+	UTextBlock* IncomingTrainText;
 
-	UPROPERTY(Transient, meta = (BindWidgetAnimOptional))
-	UWidgetAnimation* FadeAnim;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* StatusText;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
-	bool bIsMarkedForDestoy = false;
+	/** Connects animaton from OnNotificationDisappear */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	bool bHasDisappearAnimation = false;
+
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnNotificationUpdate OnNotificationUpdate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnNotificationDisappear OnNotificationDisappear;
 
 private:
 	

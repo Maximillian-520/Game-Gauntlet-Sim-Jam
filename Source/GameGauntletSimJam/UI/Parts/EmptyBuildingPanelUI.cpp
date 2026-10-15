@@ -7,11 +7,12 @@ void UEmptyBuildingPanelUI::NativeOnInitialized()
 
 	MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance());
 
-	CloseButton->OnClicked.AddDynamic(this, &UEmptyBuildingPanelUI::Hide);
-	BuildShopButton->OnClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildShopButtonPressed);
-	BuildTrackerButton->OnClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildTrackerButtonPressed);
+	CloseButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::BroadcastOnCloseButtonPressed);
+	BuildShopButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildShopButtonPressed);
+	BuildTrackerButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildTrackerButtonPressed);
 	if (MoneyManager) MoneyManager->OnMoneyChanged.AddDynamic(this, &UEmptyBuildingPanelUI::HandleMoneyChanged);
 
+	CloseButton->SetButtonText(FText::FromString(CloseText));
 	Hide();
 }
 
@@ -20,18 +21,18 @@ void UEmptyBuildingPanelUI::Show(int32 PlotNumber)
 	const FString FormattedBuildingText = FString::Printf(TEXT("Empty Plot #%03d"), PlotNumber);
 	BuildingText->SetText(FText::FromString(FormattedBuildingText));
 
-	if (ShopCostText && ShopBlueprint)
+	if (ShopBlueprint)
 	{
 		ShopCost = ShopBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
 		const FString FormattedCostText = FString::Printf(TEXT("-$%d"), ShopCost);
-		ShopCostText->SetText(FText::FromString(FormattedCostText));
+		BuildShopButton->SetButtonText(FText::FromString(FormattedCostText));
 	}
 
-	if (TrackerCostText && TrackerBlueprint)
+	if (TrackerBlueprint)
 	{
 		TrackerCost = TrackerBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
 		const FString FormattedCostText = FString::Printf(TEXT("-$%d"), TrackerCost);
-		TrackerCostText->SetText(FText::FromString(FormattedCostText));
+		BuildTrackerButton->SetButtonText(FText::FromString(FormattedCostText));
 	}
 
 	UpdatePanel();

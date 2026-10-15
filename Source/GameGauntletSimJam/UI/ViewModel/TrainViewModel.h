@@ -14,9 +14,11 @@ public:
 	void Initialize(ATrainController* InController);
 
 	UFUNCTION()
-	void HandleNotificationRequested(const FText& TrainName, const FText& Message)
+	void HandleNotificationRequested(
+		const FText& TrainType, const FText& TrainName, const FText& Message
+	)
 	{
-		BroadcastOnNotificationRequested(TrainName, Message);
+		BroadcastOnNotificationRequested(TrainType, TrainName, Message);
 	}
 
 	UFUNCTION()
@@ -27,9 +29,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationRequested OnNotificationRequested;
-	void BroadcastOnNotificationRequested(const FText& TrainName, const FText& Message)
+	void BroadcastOnNotificationRequested(
+		const FText& TrainType, const FText& TrainName, const FText& Message
+	)
 	{
-		OnNotificationRequested.Broadcast(TrainName, Message);
+		OnNotificationRequested.Broadcast(TrainType, TrainName, Message);
 	}
 
 	UPROPERTY(BlueprintAssignable)

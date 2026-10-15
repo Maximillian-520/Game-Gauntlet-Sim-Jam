@@ -7,7 +7,9 @@
 #include "TrainSpawner.h"
 #include "TrainController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNotificationRequested, const FText&, TrainName, const FText&, Message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
+	FOnNotificationRequested, const FText&, TrainType, const FText&, TrainName, const FText&, Status
+);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNotificationDeleted, const FText&, TrainName);
 
 UCLASS()
@@ -37,16 +39,18 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationRequested OnNotificationRequested;
-	void BroadcastOnNotificationRequested(const FText& TrainName, const FText& Message)
+	void BroadcastOnNotificationRequested(
+		const FText& TrainType, const FText& TrainName, const FText& Message
+	)
 	{
-		OnNotificationRequested.Broadcast(TrainName, Message);
+		OnNotificationRequested.Broadcast(TrainType, TrainName, Message);
 	}
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationDeleted OnNotificationDeleted;
 	void BroadcastOnNotificationDeleted(const FText& TrainName)
 	{
-		OnNotificationDeleted.Broadcast(TrainName); 
+		OnNotificationDeleted.Broadcast(TrainName);
 	}
 
 	// ==================================================

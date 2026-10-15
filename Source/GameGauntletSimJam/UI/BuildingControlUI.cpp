@@ -15,8 +15,10 @@ void UBuildingControlUI::NativeOnInitialized()
 	ViewModel->OnPlotSelected.AddDynamic(this, &UBuildingControlUI::HandlePlotSelected);
 
 	EmptyBuildingPanel->OnBuildButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleBuildButtonPressed);
+	EmptyBuildingPanel->OnCloseButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleCloseButtonPressed);
 	BuildingPanel->OnUpgradeButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleUpgradeButtonPressed);
 	BuildingPanel->OnDemolishButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleDemolishButtonPressed);
+	BuildingPanel->OnCloseButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleCloseButtonPressed);
 }
 
 void UBuildingControlUI::HandlePlotSelected()
@@ -26,30 +28,51 @@ void UBuildingControlUI::HandlePlotSelected()
 
 	if (Plot->Building)
 	{
-		EmptyBuildingPanel->Hide();
 		BuildingPanel->Show(Plot->PlotNumber, Plot->Building);
+		EmptyBuildingPanel->Hide();
 	}
 	else
 	{
 		EmptyBuildingPanel->Show(Plot->PlotNumber);
 		BuildingPanel->Hide();
 	}
+
+	if (!bIsShown)
+	{
+		bIsShown = true;
+		OnShowBP();
+	}
 }
 
 void UBuildingControlUI::HandleBuildButtonPressed(TSubclassOf<ABaseBuilding> BuildingBlueprint)
 {
+	if (!bIsShown) return;
+
 	if (ViewModel) ViewModel->BuildRequested(BuildingBlueprint);
-	EmptyBuildingPanel->Hide();
+	HandlePlotSelected();
 }
 
 void UBuildingControlUI::HandleUpgradeButtonPressed()
 {
+	if (!bIsShown) return;
+
 	if (ViewModel) ViewModel->UpgradeRequested();
-	BuildingPanel->Hide();
+	HandlePlotSelected();
 }
 
 void UBuildingControlUI::HandleDemolishButtonPressed()
 {
+	if (!bIsShown) return;
+
 	if (ViewModel) ViewModel->DemolishRequested();
 	BuildingPanel->Hide();
+	HandleCloseButtonPressed();
+}
+
+void UBuildingControlUI::HandleCloseButtonPressed()
+{
+	if (!bIsShown) return;
+
+	bIsShown = false;
+	OnHideBP();
 }

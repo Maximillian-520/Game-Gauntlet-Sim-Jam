@@ -21,10 +21,10 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<UBuildingPanelUI> BuildingPanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<UEmptyBuildingPanelUI> EmptyBuildingPanel;
 
 	UPROPERTY()
@@ -42,5 +42,15 @@ protected:
 	UFUNCTION()
 	void HandleDemolishButtonPressed();
 
+	UFUNCTION()
+	void HandleCloseButtonPressed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnShowBP();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnHideBP();
+
 private:
+	bool bIsShown = false;
 };
