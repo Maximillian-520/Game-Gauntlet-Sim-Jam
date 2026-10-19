@@ -47,6 +47,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Train|Main")
 	FOnTrainHitCustomer OnTrainHitCustomer;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Main")
+	void OnTrainHitCustomerBP();
 
 	// ==================================================
 	//           Travel
@@ -74,6 +76,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Train|Travel")
 	FOnTrainArrived OnTrainArrived;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Travel")
+	void OnTrainArrivedBP();
 
 	// ==================================================
 	//           Pass Through

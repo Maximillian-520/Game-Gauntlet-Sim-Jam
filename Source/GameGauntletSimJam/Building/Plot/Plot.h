@@ -43,12 +43,18 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Plot")
 	FOnPlotClicked OnPlotClicked;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Plot")
+	void OnPlotClickedBP();
 
 	UPROPERTY(BlueprintAssignable, Category = "Plot")
 	FOnBuildingChanged OnBuildingChanged;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Plot")
+	void OnBuildingChangedBP();
 
 	UPROPERTY(BlueprintAssignable, Category = "Plot")
 	FOnBuildingDestoryed OnBuildingDestoryed;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Plot")
+	void OnBuildingDestoryedBP();
 
 protected:
 	virtual void NotifyActorOnClicked(FKey ButtonPressed) override;

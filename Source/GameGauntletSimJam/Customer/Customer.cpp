@@ -58,5 +58,9 @@ void ACustomer::HandleCustomerExited()
 
 void ACustomer::HandleShoppingFinished(AShop* Shop)
 {
-	if (FMath::FRand() < PurchaseChance) OnPurchasedFromShop.Broadcast(Shop->GetItemCost());
+	if (FMath::FRand() < PurchaseChance)
+	{
+		OnPurchasedFromShop.Broadcast(Shop->GetItemCost());
+		OnPurchasedFromShopBP(Shop->GetItemCost());
+	}
 }

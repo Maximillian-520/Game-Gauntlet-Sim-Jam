@@ -20,6 +20,7 @@ void APlot::NotifyActorOnClicked(FKey ButtonPressed)
 	Super::NotifyActorOnClicked(ButtonPressed);
 
 	OnPlotClicked.Broadcast(this);
+	OnPlotClickedBP();
 }
 
 bool APlot::CanBuild(TSubclassOf<ABaseBuilding> BuildingClass) const
@@ -50,6 +51,8 @@ ABaseBuilding* APlot::BuildBuilding(TSubclassOf<ABaseBuilding> BuildingBlueprint
 	SetPlot();
 
 	OnBuildingChanged.Broadcast(Building);
+	OnBuildingChangedBP();
+
 	return Building;
 }
 
@@ -60,6 +63,7 @@ void APlot::UpgradeBuilding()
 		Building->Upgrade();
 
 		OnBuildingChanged.Broadcast(Building);
+		OnBuildingChangedBP();
 	}
 
 	SetPlot();
@@ -71,8 +75,12 @@ void APlot::DemolishBuilding()
 	{
 		DestoryedBuilding = Building;
 		Building = nullptr;
+
 		OnBuildingChanged.Broadcast(nullptr);
+		OnBuildingChangedBP();
+
 		OnBuildingDestoryed.Broadcast();
+		OnBuildingDestoryedBP();
 	}
 
 	SetPlot();

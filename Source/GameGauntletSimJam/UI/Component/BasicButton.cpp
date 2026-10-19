@@ -154,4 +154,5 @@ void UBasicButton::HandleReleased()
 void UBasicButton::HandleClicked()
 {
 	OnButtonClicked.Broadcast();
+	OnButtonClickedBP();
 }

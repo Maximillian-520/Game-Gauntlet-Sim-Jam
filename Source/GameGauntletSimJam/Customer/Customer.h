@@ -74,6 +74,9 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Customer")
+	void OnPurchasedFromShopBP(int32 MoneySpent);
+
 private:
 	bool bIsActive = true;
 };

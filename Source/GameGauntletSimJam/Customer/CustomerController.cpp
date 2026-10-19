@@ -39,6 +39,8 @@ void ACustomerController::StartMakingWay()
     }
 
 	CustomerSpawner->StopSpawning();
+
+	OnStartMakingWayBP();
 }
 
 void ACustomerController::EndMakingWay()
@@ -51,6 +53,8 @@ void ACustomerController::EndMakingWay()
 	}
 
 	CustomerSpawner->StartSpawning();
+
+	OnEndMakingWayBP();
 }
 
 void ACustomerController::HandleCustomerSpawned(ACustomer* Customer)

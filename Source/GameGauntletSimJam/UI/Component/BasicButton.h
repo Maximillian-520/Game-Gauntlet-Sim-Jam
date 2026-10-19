@@ -75,6 +75,8 @@ public:
 	/** Fired when the inner button is clicked. */
 	UPROPERTY(BlueprintAssignable, Category = "Button")
 	FOnButtonClicked OnButtonClicked;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Button")
+	void OnButtonClickedBP();
 
 protected:
 	virtual void NativeConstruct() override;

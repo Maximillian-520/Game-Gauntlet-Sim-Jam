@@ -44,7 +44,11 @@ void ATrain::Tick(float DeltaTime)
 	if (bIsTraveling)
 	{
 		TravelTimer -= DeltaTime;
-		if (TravelTimer <= 0) OnTrainArrived.Broadcast(this);
+		if (TravelTimer <= 0)
+		{
+			OnTrainArrived.Broadcast(this);
+			OnTrainArrivedBP();
+		}
 
 		TravelUpdateTimer -= DeltaTime;
 		if (TravelUpdateTimer <= 0)
@@ -107,6 +111,7 @@ void ATrain::OnHitBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (!Customer) return;
 
 	OnTrainHitCustomer.Broadcast(Customer);
+	OnTrainHitCustomerBP();
 }
 
 // ==================================================

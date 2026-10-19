@@ -23,6 +23,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void EndMakingWay();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Controller")
+	void OnStartMakingWayBP();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Controller")
+	void OnEndMakingWayBP();
+
 	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void HandleCustomerSpawned(ACustomer* Customer);
 
