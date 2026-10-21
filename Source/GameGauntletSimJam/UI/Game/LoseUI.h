@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "../Common/Manager/GameManager.h"
+#include "../Component/BasicButton.h"
+#include "../../Common/Manager/GameManager.h"
 #include "LoseUI.generated.h"
 
 UCLASS()
@@ -14,8 +14,6 @@ class GAMEGAUNTLETSIMJAM_API ULoseUI : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-    virtual void NativeConstruct() override;
-
     UFUNCTION()
     void ShowUI();
 
@@ -23,11 +21,16 @@ public:
     void HideUI();
 
 protected:
-    UPROPERTY(meta = (BindWidget))
-    UButton* RestartButton;
+    virtual void NativeConstruct() override;
+
+    const FString RestartText = "Restart";
+    const FString QuitText = "Quit";
 
     UPROPERTY(meta = (BindWidget))
-    UButton* QuitButton;
+    UBasicButton* RestartButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UBasicButton* QuitButton;
 
     UFUNCTION()
     void HandleRestartClicked();

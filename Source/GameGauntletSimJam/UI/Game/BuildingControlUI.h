@@ -5,11 +5,11 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-#include "./ViewModel/BuildingViewModel.h"
+#include "../ViewModel/BuildingViewModel.h"
 #include "./Parts/BuildingPanelUI.h"
 #include "./Parts/EmptyBuildingPanelUI.h"
-#include "../Building/BaseBuilding.h"
-#include "../Common/Manager/GameManager.h"
+#include "../../Building/BaseBuilding.h"
+#include "../../Common/Manager/GameManager.h"
 #include "BuildingControlUI.generated.h"
 
 UCLASS()
@@ -59,5 +59,8 @@ private:
 	UGameManager* GameManager = nullptr;
 
 	UFUNCTION()
-	void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
+	void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+
+	UFUNCTION()
+	void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }
 };

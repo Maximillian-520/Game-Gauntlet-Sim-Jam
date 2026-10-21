@@ -15,7 +15,11 @@ void UBuildingControlUI::NativeOnInitialized()
 	ViewModel->OnPlotSelected.AddDynamic(this, &UBuildingControlUI::HandlePlotSelected);
 	
 	GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
-	if (GameManager) GameManager->OnGameLost.AddDynamic(this, &UBuildingControlUI::HandleGameLost);
+	if (GameManager)
+	{
+		GameManager->OnGameUIShown.AddDynamic(this, &UBuildingControlUI::HandleGameUIShown);
+		GameManager->OnGameUIHidden.AddDynamic(this, &UBuildingControlUI::HandleGameUIHidden);
+	}
 
 	EmptyBuildingPanel->OnBuildButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleBuildButtonPressed);
 	EmptyBuildingPanel->OnCloseButtonPressed.AddDynamic(this, &UBuildingControlUI::HandleCloseButtonPressed);

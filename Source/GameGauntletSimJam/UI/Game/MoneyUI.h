@@ -5,8 +5,8 @@
 #include "Components/TextBlock.h"
 #include "Engine/GameInstance.h"
 #include "TimerManager.h"
-#include "../Common/Manager/MoneyManager.h"
-#include "../Common/Manager/GameManager.h"
+#include "../../Common/Manager/MoneyManager.h"
+#include "../../Common/Manager/GameManager.h"
 #include "MoneyUI.generated.h"
 
 UCLASS()
@@ -39,7 +39,10 @@ private:
     void HandleMoneyChanged(int32 NewAmount, int32 Delta);
 
     UFUNCTION()
-    void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
+    void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+
+    UFUNCTION()
+    void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }
 
     void UpdateMoneyText(int32 Amount);
 };

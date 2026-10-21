@@ -4,16 +4,15 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
-#include "../../Building/BaseBuilding.h"
-#include "../../UI/Component/BasicButton.h"
-#include "../../Common/Manager/MoneyManager.h"
-#include "BuildingPanelUI.generated.h"
+#include "../../Component/BasicButton.h"
+#include "../../../Building/BaseBuilding.h"
+#include "../../../Common/Manager/MoneyManager.h"
+#include "EmptyBuildingPanelUI.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpgradeButtonPressed);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDemolishButtonPressed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildButtonPressed, TSubclassOf<ABaseBuilding>, BuildingBlueprint);
 
 UCLASS()
-class GAMEGAUNTLETSIMJAM_API UBuildingPanelUI : public UUserWidget
+class GAMEGAUNTLETSIMJAM_API UEmptyBuildingPanelUI : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -21,7 +20,7 @@ class GAMEGAUNTLETSIMJAM_API UBuildingPanelUI : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void Show(int32 PlotNumber, ABaseBuilding* Building);
+	void Show(int32 PlotNumber);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void Hide();
@@ -30,10 +29,7 @@ public:
 	void UpdatePanel();
 
 	UPROPERTY(BlueprintAssignable, Category = "Event")
-	FOnUpgradeButtonPressed OnUpgradeButtonPressed;
-
-	UPROPERTY(BlueprintAssignable, Category = "Event")
-	FOnDemolishButtonPressed OnDemolishButtonPressed;
+	FOnBuildButtonPressed OnBuildButtonPressed;
 
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnCloseButtonPressed OnCloseButtonPressed;
@@ -43,7 +39,6 @@ public:
 protected:
 	virtual void NativeOnInitialized();
 
-	const FString MaxLevelText = "Max";
 	const FString CloseText = "Close";
 
 	// ==================================================
@@ -54,41 +49,44 @@ protected:
 	TObjectPtr<UTextBlock> BuildingText;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UTextBlock> LevelText;
-
-	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBasicButton> CloseButton;
 
 	// ==================================================
-	//           Upgrade
+	//           Shop
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UBasicButton> UpgradeButton;
+	TObjectPtr<UBasicButton> BuildShopButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<ABaseBuilding> ShopBlueprint;
 
 	// ==================================================
-	//           Demolish
+	//           Tracker
 	// ==================================================
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UBasicButton> DemolishButton;
+	TObjectPtr<UBasicButton> BuildTrackerButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<ABaseBuilding> TrackerBlueprint;
 
 	// ==================================================
 	//           Event
 	// ==================================================
 
 	UFUNCTION(BlueprintCallable, Category = "Event")
-	void HandleUpgradeButtonPressed() { OnUpgradeButtonPressed.Broadcast(); }
+	void HandleBuildShopButtonPressed() { OnBuildButtonPressed.Broadcast(ShopBlueprint); }
 
 	UFUNCTION(BlueprintCallable, Category = "Event")
-	void HandleDemolishButtonPressed() { OnDemolishButtonPressed.Broadcast(); }
+	void HandleBuildTrackerButtonPressed() { OnBuildButtonPressed.Broadcast(TrackerBlueprint); }
 
 	UFUNCTION(BlueprintCallable, Category = "Event")
 	void HandleMoneyChanged(int32 NewAmount, int32 Delta) { UpdatePanel(); }
 
 private:
 	UMoneyManager* MoneyManager;
-	ABaseBuilding* CurrentBuilding;
 
-	int32 UpgradeCost;
+	int32 ShopCost;
+	int32 TrackerCost;
 };

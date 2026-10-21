@@ -110,7 +110,7 @@ void ATrainController::HandleTrainArrived(ATrain* Train)
 
 void ATrainController::HandleTrainHitCustomer(ACustomer* HitCustomer)
 {
-	if (GameManager) GameManager->GameLost();
+	if (GameManager) GameManager->LoseGame();
 }
 
 void ATrainController::HandleTrainDestroyed(AActor* DestroyedActor)

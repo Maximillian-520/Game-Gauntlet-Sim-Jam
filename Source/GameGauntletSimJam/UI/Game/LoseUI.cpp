@@ -8,8 +8,11 @@ void ULoseUI::NativeConstruct()
     if (!GameManager) return;
 
     GameManager->OnGameLost.AddDynamic(this, &ULoseUI::ShowUI);
-    if (RestartButton) RestartButton->OnClicked.AddDynamic(this, &ULoseUI::HandleRestartClicked);
-    if (QuitButton) QuitButton->OnClicked.AddDynamic(this, &ULoseUI::HandleQuitClicked);
+    RestartButton->OnButtonClicked.AddDynamic(this, &ULoseUI::HandleRestartClicked);
+    QuitButton->OnButtonClicked.AddDynamic(this, &ULoseUI::HandleQuitClicked);
+
+    RestartButton->SetButtonText(FText::FromString(RestartText));
+    QuitButton->SetButtonText(FText::FromString(QuitText));
 
     HideUI();
 }
@@ -26,11 +29,10 @@ void ULoseUI::HideUI()
 
 void ULoseUI::HandleRestartClicked()
 {
-    const FName LevelName = FName(*UGameplayStatics::GetCurrentLevelName(this));
-    UGameplayStatics::OpenLevel(this, LevelName);
+    if (GameManager) GameManager->RestartGame();
 }
 
 void ULoseUI::HandleQuitClicked()
 {
-    UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+    if (GameManager) GameManager->QuitGame();
 }

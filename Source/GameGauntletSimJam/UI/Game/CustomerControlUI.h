@@ -5,10 +5,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "MVVMSubsystem.h"
 #include "View/MVVMView.h"
-#include "./Component/BasicButton.h"
-#include "./ViewModel/CustomerViewModel.h"
-#include "../Customer/CustomerController.h"
-#include "../Common/Manager/GameManager.h"
+#include "../Component/BasicButton.h"
+#include "../ViewModel/CustomerViewModel.h"
+#include "../../Customer/CustomerController.h"
+#include "../../Common/Manager/GameManager.h"
 #include "CustomerControlUI.generated.h"
 
 UCLASS()
@@ -43,6 +43,9 @@ private:
 	void OnEndClicked();
 
 	UFUNCTION()
-	void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
+	void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+
+	UFUNCTION()
+	void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }
 
 };

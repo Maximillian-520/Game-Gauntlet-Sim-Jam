@@ -4,9 +4,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/VerticalBox.h"
-#include "./ViewModel/TrainViewModel.h"
 #include "./Parts/TrainNotificationUI.h"
-#include "../Common/Manager/GameManager.h"
+#include "../ViewModel/TrainViewModel.h"
+#include "../../Common/Manager/GameManager.h"
 #include "TrainControlUI.generated.h"
 
 UCLASS()
@@ -50,5 +50,8 @@ private:
 	void HandleNotificationDeleted(const FText& TrainName);
 
 	UFUNCTION()
-	void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
+	void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+
+	UFUNCTION()
+	void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }
 };

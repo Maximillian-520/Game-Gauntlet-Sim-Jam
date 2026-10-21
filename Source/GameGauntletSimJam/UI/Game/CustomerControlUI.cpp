@@ -19,7 +19,11 @@ void UCustomerControlUI::NativeConstruct()
 	}
 
 	GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
-	if (GameManager) GameManager->OnGameLost.AddDynamic(this, &UCustomerControlUI::HandleGameLost);
+	if (GameManager)
+	{
+		GameManager->OnGameUIShown.AddDynamic(this, &UCustomerControlUI::HandleGameUIShown);
+		GameManager->OnGameUIHidden.AddDynamic(this, &UCustomerControlUI::HandleGameUIHidden);
+	}
 
 	StartButton->OnButtonClicked.AddDynamic(this, &UCustomerControlUI::OnStartClicked);
 	EndButton->OnButtonClicked.AddDynamic(this, &UCustomerControlUI::OnEndClicked);
