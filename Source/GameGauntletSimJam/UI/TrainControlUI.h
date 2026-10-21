@@ -6,6 +6,7 @@
 #include "Components/VerticalBox.h"
 #include "./ViewModel/TrainViewModel.h"
 #include "./Parts/TrainNotificationUI.h"
+#include "../Common/Manager/GameManager.h"
 #include "TrainControlUI.generated.h"
 
 UCLASS()
@@ -39,10 +40,15 @@ private:
 	UPROPERTY()
 	TMap<FName, UTrainNotificationUI*> TrainNotificationMap;
 
+	UPROPERTY()
+	UGameManager* GameManager = nullptr;
+
 	UFUNCTION()
 	void HandleNotificationRequested(const FText& TrainType, const FText& TrainName, const FText& Message);
 
 	UFUNCTION()
 	void HandleNotificationDeleted(const FText& TrainName);
 
+	UFUNCTION()
+	void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
 };

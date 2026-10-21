@@ -27,5 +27,4 @@ protected:
 
 private:
 	TArray<UUserWidget*> UIs;
-
 };

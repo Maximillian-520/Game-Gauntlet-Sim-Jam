@@ -14,6 +14,9 @@ void UTrainControlUI::NativeConstruct()
 
 	ViewModel->OnNotificationRequested.AddDynamic(this, &UTrainControlUI::HandleNotificationRequested);
 	ViewModel->OnNotificationDeleted.AddDynamic(this, &UTrainControlUI::HandleNotificationDeleted);
+
+	GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
+	if (GameManager) GameManager->OnGameLost.AddDynamic(this, &UTrainControlUI::HandleGameLost);
 }
 
 void UTrainControlUI::NativeDestruct()

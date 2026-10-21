@@ -33,6 +33,8 @@ void ACustomer::StrollAround()
 
 void ACustomer::SeeBuilding(ABaseBuilding* Building)
 {
+	if (CustomerBehaviorComponent->IsMakingWay()) return;
+
 	AShop* Shop = Cast<AShop>(Building);
 	if (Shop)
 	{

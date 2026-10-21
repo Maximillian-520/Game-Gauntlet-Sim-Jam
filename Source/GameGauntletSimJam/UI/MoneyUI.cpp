@@ -5,9 +5,10 @@ void UMoneyUI::NativeConstruct()
     Super::NativeConstruct();
 
     MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance());
-    if (!MoneyManager) return;
+    if (MoneyManager) MoneyManager->OnMoneyChanged.AddDynamic(this, &UMoneyUI::HandleMoneyChanged);
 
-    MoneyManager->OnMoneyChanged.AddDynamic(this, &UMoneyUI::HandleMoneyChanged);
+    GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
+    if (GameManager) GameManager->OnGameLost.AddDynamic(this, &UMoneyUI::HandleGameLost);
 
     // Show the current value immediately
     UpdateMoneyText(MoneyManager->GetMoney());

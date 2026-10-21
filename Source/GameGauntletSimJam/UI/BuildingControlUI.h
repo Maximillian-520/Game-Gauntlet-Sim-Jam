@@ -9,6 +9,7 @@
 #include "./Parts/BuildingPanelUI.h"
 #include "./Parts/EmptyBuildingPanelUI.h"
 #include "../Building/BaseBuilding.h"
+#include "../Common/Manager/GameManager.h"
 #include "BuildingControlUI.generated.h"
 
 UCLASS()
@@ -53,4 +54,10 @@ protected:
 
 private:
 	bool bIsShown = false;
+
+	UPROPERTY()
+	UGameManager* GameManager = nullptr;
+
+	UFUNCTION()
+	void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
 };

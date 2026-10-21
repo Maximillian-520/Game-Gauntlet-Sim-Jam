@@ -11,6 +11,7 @@ void AGameUIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+    // --- Spawn all UI ---
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
     if (!PC) return;
 

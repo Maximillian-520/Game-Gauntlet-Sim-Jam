@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "TimerManager.h"
 #include "../Common/Manager/MoneyManager.h"
+#include "../Common/Manager/GameManager.h"
 #include "MoneyUI.generated.h"
 
 UCLASS()
@@ -28,11 +29,17 @@ protected:
     void OnMoneyChangedBP(int32 NewAmount, int32 Delta);
 
 private:
+    UPROPERTY()
+    UMoneyManager* MoneyManager = nullptr;
+
+    UPROPERTY()
+    UGameManager* GameManager = nullptr;
+
     UFUNCTION()
     void HandleMoneyChanged(int32 NewAmount, int32 Delta);
 
-    void UpdateMoneyText(int32 Amount);
+    UFUNCTION()
+    void HandleGameLost() { SetVisibility(ESlateVisibility::Hidden); }
 
-    UPROPERTY()
-    UMoneyManager* MoneyManager = nullptr;
+    void UpdateMoneyText(int32 Amount);
 };

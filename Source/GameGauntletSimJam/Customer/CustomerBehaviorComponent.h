@@ -84,6 +84,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Behavior|Making Way")
 	void DoMakeWay(AActor* NewMakeWayActor, const FVector& NewMakeWayLocation, const FRotator& NewMakeWayRotation);
 
+	UFUNCTION(BlueprintCallable, Category = "Behavior|Making Way")
+	bool IsMakingWay() const { return State == EBehaviorState::MakingWay; }
+
 protected:
 	virtual void BeginPlay() override;
 
