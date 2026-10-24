@@ -57,6 +57,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	float MaxSpawnInterval = 10.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	bool bOverrideTravelDurationOnSpawn = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	float OverrideTravelDurationValue = 12.0f;
+
 protected:
 	virtual void BeginPlay() override;
 

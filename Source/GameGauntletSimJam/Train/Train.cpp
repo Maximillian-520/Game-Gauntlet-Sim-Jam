@@ -78,6 +78,16 @@ void ATrain::Tick(float DeltaTime)
 }
 
 // ==================================================
+//           Travel
+// ==================================================
+
+void ATrain::OverrideTravelDuration(float NewTravelDuration)
+{
+	TravelTimer = NewTravelDuration;
+	bTravelTimerAlreadySet = true;
+}
+
+// ==================================================
 //           Main
 // ==================================================
 
@@ -85,7 +95,7 @@ void ATrain::Travel()
 {
 	bIsTraveling = true;
 	bIsPassing = false;
-	TravelTimer = FMath::FRandRange(MinTravelDuration, MaxTravelDuration);
+	if (!bTravelTimerAlreadySet) TravelTimer = FMath::FRandRange(MinTravelDuration, MaxTravelDuration);
 	TravelUpdateTimer = TravelUpdateInterval;
 	SetActorHiddenInGame(true);
 }

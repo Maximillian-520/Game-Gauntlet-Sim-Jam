@@ -78,6 +78,7 @@ void ATrainSpawner::SpawnTrain()
         if (TrainInstance) 
         {
             TrainInstance->SetPassTargetLocation(TargetLocation);
+            if (bOverrideTravelDurationOnSpawn) TrainInstance->OverrideTravelDuration(OverrideTravelDurationValue);
             OnTrainSpawned.Broadcast(TrainInstance);
         }
     }

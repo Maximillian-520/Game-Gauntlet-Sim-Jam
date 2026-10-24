@@ -67,6 +67,8 @@ public:
 	/* In Kilometers per hour */
 	int32 TrainSpeed = 100;
 
+	void OverrideTravelDuration(float NewTravelDuration);
+
 	UFUNCTION(BlueprintCallable, Category = "Train|Travel")
 	/* In Kilometers */
 	float GetTrainRemainingDistance() const { return FMath::Max(0.f, TravelTimer) * (TrainSpeed / 3600.f); }
@@ -133,6 +135,7 @@ protected:
 
 private:
 	bool bIsTraveling = false;
+	bool bTravelTimerAlreadySet = false;
 	float TravelTimer;
 	float TravelUpdateTimer;
 
