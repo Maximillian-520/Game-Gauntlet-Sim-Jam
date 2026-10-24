@@ -4,9 +4,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
+// Custom
 #include "../../Component/BasicButton.h"
 #include "../../../Building/BaseBuilding.h"
 #include "../../../Common/Manager/MoneyManager.h"
+// ==========
 #include "EmptyBuildingPanelUI.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildButtonPressed, TSubclassOf<ABaseBuilding>, BuildingBlueprint);
@@ -72,6 +74,16 @@ protected:
 	TSubclassOf<ABaseBuilding> TrackerBlueprint;
 
 	// ==================================================
+	//           Decor
+	// ==================================================
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UBasicButton> BuildDecorButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<ABaseBuilding> DecorBlueprint;
+
+	// ==================================================
 	//           Event
 	// ==================================================
 
@@ -82,6 +94,9 @@ protected:
 	void HandleBuildTrackerButtonPressed() { OnBuildButtonPressed.Broadcast(TrackerBlueprint); }
 
 	UFUNCTION(BlueprintCallable, Category = "Event")
+	void HandleBuildDecorButtonPressed() { OnBuildButtonPressed.Broadcast(DecorBlueprint); }
+
+	UFUNCTION(BlueprintCallable, Category = "Event")
 	void HandleMoneyChanged(int32 NewAmount, int32 Delta) { UpdatePanel(); }
 
 private:
@@ -89,4 +104,5 @@ private:
 
 	int32 ShopCost;
 	int32 TrackerCost;
+	int32 DecorCost;
 };

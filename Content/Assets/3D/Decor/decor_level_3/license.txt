@@ -1,0 +1,11 @@
+Model Information:
+* title:	Thinker Rodin 4k Tris
+* source:	https://sketchfab.com/3d-models/thinker-rodin-4k-tris-921384c784ed4b569c61c896c4b8fbbe
+* author:	Silas Merlin (https://sketchfab.com/silasmerlin)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Thinker Rodin 4k Tris" (https://sketchfab.com/3d-models/thinker-rodin-4k-tris-921384c784ed4b569c61c896c4b8fbbe) by Silas Merlin (https://sketchfab.com/silasmerlin) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

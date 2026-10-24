@@ -10,6 +10,7 @@ void UEmptyBuildingPanelUI::NativeOnInitialized()
 	CloseButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::BroadcastOnCloseButtonPressed);
 	BuildShopButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildShopButtonPressed);
 	BuildTrackerButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildTrackerButtonPressed);
+	BuildDecorButton->OnButtonClicked.AddDynamic(this, &UEmptyBuildingPanelUI::HandleBuildDecorButtonPressed);
 	if (MoneyManager) MoneyManager->OnMoneyChanged.AddDynamic(this, &UEmptyBuildingPanelUI::HandleMoneyChanged);
 
 	CloseButton->SetButtonText(FText::FromString(CloseText));
@@ -35,6 +36,13 @@ void UEmptyBuildingPanelUI::Show(int32 PlotNumber)
 		BuildTrackerButton->SetButtonText(FText::FromString(FormattedCostText));
 	}
 
+	if (DecorBlueprint)
+	{
+		DecorCost = DecorBlueprint->GetDefaultObject<ABaseBuilding>()->BuildCost;
+		const FString FormattedCostText = FString::Printf(TEXT("-$%d"), DecorCost);
+		BuildDecorButton->SetButtonText(FText::FromString(FormattedCostText));
+	}
+
 	UpdatePanel();
 
 	SetVisibility(ESlateVisibility::Visible);
@@ -49,4 +57,5 @@ void UEmptyBuildingPanelUI::UpdatePanel()
 {
 	BuildShopButton->SetIsEnabled(MoneyManager->GetMoney() >= ShopCost);
 	BuildTrackerButton->SetIsEnabled(MoneyManager->GetMoney() >= TrackerCost);
+	BuildDecorButton->SetIsEnabled(MoneyManager->GetMoney() >= DecorCost);
 }

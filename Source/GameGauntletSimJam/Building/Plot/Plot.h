@@ -5,7 +5,9 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
+// Custom
 #include "../BaseBuilding.h"
+// ==========
 #include "Plot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlotClicked, APlot*, Plot);

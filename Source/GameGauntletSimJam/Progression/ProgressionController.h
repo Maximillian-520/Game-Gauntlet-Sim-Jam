@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-// Custom Headers
+// Custom
 #include "../Train/TrainController.h"
 #include "../Train/TrainSpawner.h"
 // ==========

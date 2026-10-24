@@ -6,7 +6,7 @@ void UTrackerManager::Reset(float InitialBaseTrackInterval)
     TrackIntervalReduction = 0.0f;
 }
 
-float UTrackerManager::GetCalculatedTrackInterval(int32 DivideCount)
+float UTrackerManager::GetCalculatedTrackInterval(int32 DivideCount) const
 {
     return FMath::Max(MinimumTrackInterval, BaseTrackInterval - (TrackIntervalReduction / DivideCount));
 }

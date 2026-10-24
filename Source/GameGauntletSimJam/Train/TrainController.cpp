@@ -76,12 +76,12 @@ void ATrainController::HandleTrainSpawned(ATrain* Train)
 	Train->OnTrainArrived.AddDynamic(this, &ATrainController::HandleTrainArrived);
 	Train->OnTrainHitCustomer.AddDynamic(this, &ATrainController::HandleTrainHitCustomer);
 	Train->OnDestroyed.AddDynamic(this, &ATrainController::HandleTrainDestroyed);
-	
-	if (TrackerManager) Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
 
 	Trains.Add(Train);
 	TrainCount++;
 	UpdateTrainTrackInterval();
+	
+	if (TrackerManager) Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
 
 	if (TrainCount >= MaxTrainCount) TrainSpawner->StopSpawning();
 

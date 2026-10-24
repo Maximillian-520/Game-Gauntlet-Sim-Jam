@@ -6,19 +6,19 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTrackIntervalChanged);
 
-const float MinimumTrackInterval = 0.1f;
-
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API UTrackerManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-    UFUNCTION(BlueprintCallable, Category = "Money")
+    const float MinimumTrackInterval = 0.1f;
+
+    UFUNCTION(BlueprintCallable, Category = "Tracking")
     void Reset(float InitialBaseTrackInterval = 3.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Tracking")
-    float GetCalculatedTrackInterval(int32 DivideCount);
+    float GetCalculatedTrackInterval(int32 DivideCount) const;
 
     UFUNCTION(BlueprintCallable, Category = "Tracking")
     void AddTrackIntervalReduction(float Reduction);

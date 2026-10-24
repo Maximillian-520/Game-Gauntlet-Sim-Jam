@@ -12,6 +12,16 @@ void ATracker::BeginPlay()
 	UpdateTrackIntervalReduction();
 }
 
+void ATracker::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
+	{
+		TrackerManager->AddTrackIntervalReduction(-CalculateTrackIntervalReduction());
+	}
+
+	Super::EndPlay(EndPlayReason);
+}
+
 //void ATracker::Tick(float DeltaTime)
 //{
 //	Super::Tick(DeltaTime);
@@ -23,6 +33,8 @@ void ATracker::Upgrade()
 	Super::Upgrade();
 
 	SetBuildingLevelMesh();
+
+	UpdateTrackIntervalReduction();
 }
 
 void ATracker::UpdateTrackIntervalReduction()
@@ -38,7 +50,11 @@ void ATracker::UpdateTrackIntervalReduction()
 	}
 }
 
-float ATracker::CalculateTrackIntervalReduction()
+float ATracker::CalculateTrackIntervalReduction() const
 {
-	return BaseTrackIntervalReduction + (TrackIntervalReductionPerLevel * FMath::Max(0, GetCurrentLevel()));
+	if (TrackIntervalReductions.Num() <= 0) return 0;
+
+	int32 Index = FMath::Min(Level, TrackIntervalReductions.Num());
+
+	return TrackIntervalReductions[Index - 1];
 }

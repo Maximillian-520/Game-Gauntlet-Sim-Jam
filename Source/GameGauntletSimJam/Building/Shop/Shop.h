@@ -1,8 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../BaseBuilding.h"
 #include "Components/BoxComponent.h"
+// Custom
+#include "../BaseBuilding.h"
+// ==========
 #include "Shop.generated.h"
 
 UCLASS()
@@ -15,6 +17,9 @@ public:
 
 	virtual void Upgrade();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
+	TArray<int32> ItemCosts = TArray<int32>{10};
+
 	UFUNCTION(BlueprintCallable, Category = "Shop")
 	FVector GetStandingLocation() const;
 
@@ -26,14 +31,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
 	TObjectPtr<UBoxComponent> StandingArea;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
-	TArray<int32> ItemCosts = TArray<int32>{10};
 
 	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
 

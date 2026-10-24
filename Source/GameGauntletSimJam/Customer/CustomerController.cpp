@@ -10,7 +10,15 @@ void ACustomerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CustomerManager = UGameInstance::GetSubsystem<UCustomerManager>(GetGameInstance());
+	if (!CustomerManager) return;
+	MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance());
+	if (!MoneyManager) return;
+
 	CustomerSpawner->OnCustomerSpawned.AddDynamic(this, &ACustomerController::HandleCustomerSpawned);
+	if (CustomerManager) CustomerManager->OnSpawnIntervalChanged.AddDynamic(this, &ACustomerController::HandleSpawnIntervalChanged);
+
+	UpdateSpawnInterval();
 }
 
 void ACustomerController::Tick(float DeltaTime)
@@ -57,6 +65,15 @@ void ACustomerController::EndMakingWay()
 	OnEndMakingWayBP();
 }
 
+void ACustomerController::UpdateSpawnInterval()
+{
+	if (CustomerSpawner && CustomerManager)
+	{
+		CustomerSpawner->MinSpawnInterval = CustomerManager->GetCalculatedSpawnInterval();
+		CustomerSpawner->MaxSpawnInterval = CustomerManager->GetCalculatedSpawnInterval();
+	}
+}
+
 void ACustomerController::HandleCustomerSpawned(ACustomer* Customer)
 {
 	Customer->OnPurchasedFromShop.AddDynamic(this, &ACustomerController::HandlePurchasedFromShop);
@@ -66,10 +83,7 @@ void ACustomerController::HandleCustomerSpawned(ACustomer* Customer)
 
 void ACustomerController::HandlePurchasedFromShop(int32 MoneySpent)
 {
-	if (UMoneyManager* MoneyManager = UGameInstance::GetSubsystem<UMoneyManager>(GetGameInstance()))
-	{
-		MoneyManager->AddMoney(MoneySpent);
-	}
+	if (MoneyManager) MoneyManager->AddMoney(MoneySpent);
 }
 
 void ACustomerController::HandleCustomerDestroyed(AActor* DestroyedActor)

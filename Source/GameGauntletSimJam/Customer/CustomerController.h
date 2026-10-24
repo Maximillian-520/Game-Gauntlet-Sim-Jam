@@ -2,8 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Common/Manager/MoneyManager.h"
+// Custom
 #include "CustomerSpawner.h"
+#include "../Common/Manager/CustomerManager.h"
+#include "../Common/Manager/MoneyManager.h"
+// ==========
 #include "CustomerController.generated.h"
 
 UCLASS()
@@ -23,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void EndMakingWay();
 
+	UFUNCTION(BlueprintCallable, Category = "Controller")
+	void UpdateSpawnInterval();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Controller")
 	void OnStartMakingWayBP();
 
@@ -38,11 +44,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void HandleCustomerDestroyed(AActor* DestroyedActor);
 
+	UFUNCTION(BlueprintCallable, Category = "Controller")
+	void HandleSpawnIntervalChanged() { UpdateSpawnInterval(); }
+
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
-private:	
+private:
+	UPROPERTY()
+	UCustomerManager* CustomerManager = nullptr;
+	UPROPERTY()
+	UMoneyManager* MoneyManager = nullptr;
+
 	TArray<ACustomer*> Customers;
 };
