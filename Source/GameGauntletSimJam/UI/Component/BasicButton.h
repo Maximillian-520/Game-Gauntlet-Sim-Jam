@@ -30,6 +30,8 @@ struct FButtonTweenSettings
 	FVector2D Offset = FVector2D::ZeroVector;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonHovered);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonUnhovered);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonClicked);
 
 /**
@@ -71,6 +73,14 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Button")
 	bool IsTweening() const { return bTweening; }
+
+	/** Fired when the inner button is hovered. */
+	UPROPERTY(BlueprintAssignable, Category = "Button")
+	FOnButtonHovered OnButtonHovered;
+
+	/** Fired when the inner button is unhovered. */
+	UPROPERTY(BlueprintAssignable, Category = "Button")
+	FOnButtonUnhovered OnButtonUnhovered;
 
 	/** Fired when the inner button is clicked. */
 	UPROPERTY(BlueprintAssignable, Category = "Button")

@@ -133,11 +133,13 @@ void UBasicButton::ApplyCurrent()
 
 void UBasicButton::HandleHovered()
 {
+	OnButtonHovered.Broadcast();
 	TweenToState(HoveredTween);
 }
 
 void UBasicButton::HandleUnhovered()
 {
+	OnButtonUnhovered.Broadcast();
 	TweenToState(NormalTween);
 }
 

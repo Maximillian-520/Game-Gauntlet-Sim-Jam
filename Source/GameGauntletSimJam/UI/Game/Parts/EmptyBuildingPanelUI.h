@@ -60,8 +60,14 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBasicButton> BuildShopButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Shop")
 	TSubclassOf<ABaseBuilding> ShopBlueprint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Shop")
+	FText ShopBuildingName = FText::FromString("Shop");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Shop")
+	FText ShopBuildingDescription = FText::FromString("Placeholder Description");
 
 	// ==================================================
 	//           Tracker
@@ -70,8 +76,14 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBasicButton> BuildTrackerButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Tracker")
 	TSubclassOf<ABaseBuilding> TrackerBlueprint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Tracker")
+	FText TrackerBuildingName = FText::FromString("Tracker");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Tracker")
+	FText TrackerBuildingDescription = FText::FromString("Placeholder Description");
 
 	// ==================================================
 	//           Decor
@@ -80,23 +92,47 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBasicButton> BuildDecorButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Decor")
 	TSubclassOf<ABaseBuilding> DecorBlueprint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Decor")
+	FText DecorBuildingName = FText::FromString("Decor");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI|Decor")
+	FText DecorBuildingDescription = FText::FromString("Placeholder Description");
 
 	// ==================================================
 	//           Event
 	// ==================================================
 
-	UFUNCTION(BlueprintCallable, Category = "Event")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnBuildButtonHoverBP(const FText& BuildingName, const FText& BuildingDescription);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnBuildButtonUnhoverBP();
+
+	UFUNCTION()
+	void HandleShopHovered() { UE_LOG(LogTemp, Warning, TEXT("Hover desc: %s"), *ShopBuildingDescription.ToString()); OnBuildButtonHoverBP(ShopBuildingName, ShopBuildingDescription); }
+
+	UFUNCTION()
+	void HandleTrackerHovered() { OnBuildButtonHoverBP(TrackerBuildingName, TrackerBuildingDescription); }
+
+	UFUNCTION()
+	void HandleDecorHovered() { OnBuildButtonHoverBP(DecorBuildingName, DecorBuildingDescription); }
+
+	UFUNCTION()
+	void HandleBuildButtonUnhovered() { OnBuildButtonUnhoverBP(); }
+
+	UFUNCTION()
 	void HandleBuildShopButtonPressed() { OnBuildButtonPressed.Broadcast(ShopBlueprint); }
 
-	UFUNCTION(BlueprintCallable, Category = "Event")
+	UFUNCTION()
 	void HandleBuildTrackerButtonPressed() { OnBuildButtonPressed.Broadcast(TrackerBlueprint); }
 
-	UFUNCTION(BlueprintCallable, Category = "Event")
+	UFUNCTION()
 	void HandleBuildDecorButtonPressed() { OnBuildButtonPressed.Broadcast(DecorBlueprint); }
 
-	UFUNCTION(BlueprintCallable, Category = "Event")
+	UFUNCTION()
 	void HandleMoneyChanged(int32 NewAmount, int32 Delta) { UpdatePanel(); }
 
 private:
