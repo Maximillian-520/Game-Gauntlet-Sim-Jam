@@ -1,14 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include "MVVMViewModelBase.h"
+// Custom
 #include "../../Building/BuildingController.h"
+// ==========
 #include "BuildingViewModel.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlotSelected);
 
 UCLASS()
-class GAMEGAUNTLETSIMJAM_API UBuildingViewModel : public UObject
+class GAMEGAUNTLETSIMJAM_API UBuildingViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 

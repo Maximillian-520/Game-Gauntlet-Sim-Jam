@@ -4,6 +4,6 @@ void UTrainViewModel::Initialize(ATrainController* InController)
 {
 	Controller = InController;
 
-	Controller->OnNotificationRequested.AddDynamic(this, &UTrainViewModel::HandleNotificationRequested);
-	Controller->OnNotificationDeleted.AddDynamic(this, &UTrainViewModel::HandleNotificationDeleted);
+	Controller->OnNotificationRequested.AddDynamic(this, &UTrainViewModel::BroadcastOnNotificationRequested);
+	Controller->OnNotificationDeleted.AddDynamic(this, &UTrainViewModel::BroadcastOnNotificationDeleted);
 }

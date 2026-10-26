@@ -2,7 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
+// Custom
 #include "../../Train/TrainController.h"
+// ==========
 #include "TrainViewModel.generated.h"
 
 UCLASS(BlueprintType)
@@ -13,22 +15,9 @@ class GAMEGAUNTLETSIMJAM_API UTrainViewModel : public UMVVMViewModelBase
 public:
 	void Initialize(ATrainController* InController);
 
-	UFUNCTION()
-	void HandleNotificationRequested(
-		const FText& TrainType, const FText& TrainName, const FText& Message
-	)
-	{
-		BroadcastOnNotificationRequested(TrainType, TrainName, Message);
-	}
-
-	UFUNCTION()
-	void HandleNotificationDeleted(const FText& TrainName)
-	{
-		BroadcastOnNotificationDeleted(TrainName);
-	}
-
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationRequested OnNotificationRequested;
+	UFUNCTION()
 	void BroadcastOnNotificationRequested(
 		const FText& TrainType, const FText& TrainName, const FText& Message
 	)
@@ -38,6 +27,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNotificationDeleted OnNotificationDeleted;
+	UFUNCTION()
 	void BroadcastOnNotificationDeleted(const FText& TrainName)
 	{
 		OnNotificationDeleted.Broadcast(TrainName);
