@@ -27,29 +27,29 @@ public:
 	AActor* CustomerInstanceParent;
 
 	// ==================================================
-	//           Main
+	//           Spawner
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Main")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
 	TSubclassOf<ACustomer> CustomerBlueprint;
 
-	UPROPERTY(EditAnywhere, Category = "Spawner|Main")
+	UPROPERTY(EditAnywhere, Category = "Spawner")
 	TArray<ATriggerBox*> SpawnAreas;
 
-	UFUNCTION(BlueprintCallable, Category = "Spawner|Main")
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void StartSpawning();
 
-	UFUNCTION(BlueprintCallable, Category = "Spawner|Main")
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void StopSpawning();
 
-	UFUNCTION(BlueprintCallable, Category = "Spawner|Main")
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnCustomer();
 
 	UBoxComponent* GetNearestSpawnArea(const FVector CurrentLocation);
 
 	FVector GetRandomPointInArea(const UBoxComponent* Area) const;
 	
-	UPROPERTY(BlueprintAssignable, Category = "Spawner|Main")
+	UPROPERTY(BlueprintAssignable, Category = "Spawner")
 	FOnCustomerSpawned OnCustomerSpawned;
 	
 	// ==================================================

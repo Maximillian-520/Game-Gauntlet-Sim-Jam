@@ -3,7 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Engine/TargetPoint.h"
+// Custom
 #include "Train.h"
+// ==========
 #include "TrainSpawner.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrainSpawned, ATrain*, Train);
@@ -15,6 +17,13 @@ class GAMEGAUNTLETSIMJAM_API ATrainSpawner : public AActor
 	
 public:	
 	ATrainSpawner();
+
+	// ==================================================
+	//           Reference
+	// ==================================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Reference")
+	AActor* TrainInstanceParent;
 
 	// ==================================================
 	//           Spawner
@@ -45,23 +54,26 @@ public:
 	//           Settings
 	// ==================================================
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
 	bool bStartSpawningImmediately = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawner|Settings")
 	bool bIsSpawning = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
 	float MinSpawnInterval = 5.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
 	float MaxSpawnInterval = 10.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
 	bool bOverrideTravelDurationOnSpawn = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
-	float OverrideTravelDurationValue = 12.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
+	float OverrideMinTravelDurationValue = 8.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner|Settings")
+	float OverrideMaxTravelDurationValue = 16.0f;
 
 protected:
 	virtual void BeginPlay() override;

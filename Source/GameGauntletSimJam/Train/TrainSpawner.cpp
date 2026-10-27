@@ -29,6 +29,10 @@ void ATrainSpawner::Tick(float DeltaTime)
     }
 }
 
+// ==================================================
+//           Spawner
+// ==================================================
+
 void ATrainSpawner::StartSpawning()
 {
     bIsSpawning = true;
@@ -77,8 +81,23 @@ void ATrainSpawner::SpawnTrain()
 
         if (TrainInstance) 
         {
+            // Set parent
+            if (TrainInstanceParent)
+            {
+                TrainInstance->AttachToActor(
+                    TrainInstanceParent,
+                    FAttachmentTransformRules::KeepWorldTransform
+                );
+            }
+            // Set pass target and travel duration
             TrainInstance->SetPassTargetLocation(TargetLocation);
-            if (bOverrideTravelDurationOnSpawn) TrainInstance->OverrideTravelDuration(OverrideTravelDurationValue);
+            if (bOverrideTravelDurationOnSpawn)
+            {
+                TrainInstance->MinTravelDuration = OverrideMinTravelDurationValue;
+                TrainInstance->MaxTravelDuration = OverrideMaxTravelDurationValue;
+            }
+            TrainInstance->Travel();
+            // Broadcast event
             OnTrainSpawned.Broadcast(TrainInstance);
         }
     }

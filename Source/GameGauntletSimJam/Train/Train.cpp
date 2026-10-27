@@ -25,8 +25,6 @@ void ATrain::BeginPlay()
 	HitBox->OnComponentBeginOverlap.AddDynamic(this, &ATrain::OnHitBoxBeginOverlap);
 
 	TrainNumber = GenerateUniqueNumber();
-
-	Travel();
 }
 
 void ATrain::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -53,7 +51,7 @@ void ATrain::Travel()
 {
 	bIsTraveling = true;
 	bIsPassing = false;
-	if (!bTravelTimerAlreadySet) TravelTimer = FMath::FRandRange(MinTravelDuration, MaxTravelDuration);
+	TravelTimer = FMath::FRandRange(MinTravelDuration, MaxTravelDuration);
 	TravelUpdateTimer = TravelUpdateInterval;
 	SetActorHiddenInGame(true);
 }
@@ -64,7 +62,7 @@ void ATrain::UpdateTrainTraveling(float DeltaTime)
 	if (TravelTimer <= 0)
 	{
 		OnTrainArrived.Broadcast(this);
-		OnTrainArrivedBP();
+		bIsTraveling = false;
 	}
 
 	TravelUpdateTimer -= DeltaTime;
@@ -75,12 +73,6 @@ void ATrain::UpdateTrainTraveling(float DeltaTime)
 	}
 }
 
-void ATrain::OverrideTravelDuration(float NewTravelDuration)
-{
-	TravelTimer = NewTravelDuration;
-	bTravelTimerAlreadySet = true;
-}
-
 // ==================================================
 //           Passing
 // ==================================================
@@ -89,8 +81,11 @@ void ATrain::PassThrough()
 {
 	bIsTraveling = false;
 	bIsPassing = true;
+
 	SetActorHiddenInGame(false);
 	LinearMovementComponent->SetVelocity(LinearMovementComponent->MoveSpeed);
+
+	OnTrainPassingBP();
 }
 
 void ATrain::UpdateTrainPassing(float DeltaTime)

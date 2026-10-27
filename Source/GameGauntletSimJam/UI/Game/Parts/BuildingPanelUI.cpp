@@ -8,10 +8,12 @@ void UBuildingPanelUI::NativeOnInitialized()
 
 	CloseButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::BroadcastOnCloseButtonPressed);
 	UpgradeButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::HandleUpgradeButtonPressed);
+	UpgradeButton->OnButtonHovered.AddDynamic(this, &UBuildingPanelUI::HandleUpgradeButtonHovered);
+	UpgradeButton->OnButtonUnhovered.AddDynamic(this, &UBuildingPanelUI::OnUpgradeButtonUnhoverBP);
 	DemolishButton->OnButtonClicked.AddDynamic(this, &UBuildingPanelUI::HandleDemolishButtonPressed);
 	if (MoneyManager) MoneyManager->OnMoneyChanged.AddDynamic(this, &UBuildingPanelUI::HandleMoneyChanged);
 
-	CloseButton->SetButtonText(FText::FromString(CloseText));
+	CloseButton->SetButtonText(CloseButtonText);
 	Hide();
 }
 
@@ -30,12 +32,13 @@ void UBuildingPanelUI::Show(int32 PlotNumber, ABaseBuilding* Building)
 	// Setup upgrade
 	if (Building->IsMaxLevel())
 	{
-		UpgradeButton->SetButtonText(FText::FromString(MaxLevelText));
+		UpgradeButton->SetButtonText(MaxLevelButtonText);
 		UpgradeButton->SetIsEnabled(false);
 	}
 	else
 	{
 		UpgradeCost = Building->GetUpgradeCost();
+		UpgradeDescription = Building->GetUpgradeDescription();
 		const FString FormattedCostText = FString::Printf(TEXT("-$%d"), UpgradeCost);
 		UpgradeButton->SetButtonText(FText::FromString(FormattedCostText));
 	}
@@ -48,6 +51,7 @@ void UBuildingPanelUI::Show(int32 PlotNumber, ABaseBuilding* Building)
 	CurrentBuilding = Building;
 	UpdatePanel();
 
+	OnUpgradeButtonUnhoverBP();
 	SetVisibility(ESlateVisibility::Visible);
 }
 
@@ -60,10 +64,11 @@ void UBuildingPanelUI::Hide()
 
 void UBuildingPanelUI::UpdatePanel()
 {
-	if (!CurrentBuilding) return;
+	if (CurrentBuilding && MoneyManager)
+	{
+		bool bIsMaxLevel = CurrentBuilding->IsMaxLevel();
+		bool bCanAfford = MoneyManager->GetMoney() >= UpgradeCost;
 
-	bool bIsMaxLevel = CurrentBuilding->IsMaxLevel();
-	bool bCanAfford = MoneyManager->GetMoney() >= UpgradeCost;
-
-	UpgradeButton->SetIsEnabled(!bIsMaxLevel && bCanAfford);
+		UpgradeButton->SetIsEnabled(!bIsMaxLevel && bCanAfford);
+	}
 }

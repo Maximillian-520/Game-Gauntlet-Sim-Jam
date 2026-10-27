@@ -25,7 +25,7 @@ void ABaseBuilding::EndPlay(const EEndPlayReason::Type EndPlayReason)
 }
 
 // ==================================================
-//           Main
+//           Building
 // ==================================================
 
 void ABaseBuilding::SetBuildingLevelMesh()
@@ -67,6 +67,24 @@ void ABaseBuilding::SetBuildingLevelMesh()
 void ABaseBuilding::Upgrade()
 {
 	Level = FMath::Clamp(Level + 1, 1, MaxLevel);
+}
+
+int32 ABaseBuilding::GetUpgradeCost() const
+{
+	if (UpgradeCosts.Num() <= 0) return 0;
+
+	int32 Index = FMath::Min(Level, UpgradeCosts.Num());
+
+	return UpgradeCosts[Index - 1];
+}
+
+FText ABaseBuilding::GetUpgradeDescription() const
+{
+	if (UpgradeDescriptions.Num() <= 0) return FText::GetEmpty();
+
+	int32 Index = FMath::Min(Level, UpgradeDescriptions.Num());
+
+	return UpgradeDescriptions[Index - 1];
 }
 
 // ==================================================

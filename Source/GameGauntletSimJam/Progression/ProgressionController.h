@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Curves/CurveVector.h"
 // Custom
 #include "../Train/TrainController.h"
 #include "../Train/TrainSpawner.h"
@@ -38,10 +39,10 @@ public:
 	UCurveFloat* MaxTrainCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progression")
-	UCurveFloat* TrainSpawnIntervalCurve;
+	UCurveVector* TrainSpawnIntervalCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progression")
-	UCurveFloat* TrainTravelDurationCurve;
+	UCurveVector* TrainTravelDurationCurve;
 
 protected:
 	virtual void BeginPlay() override;

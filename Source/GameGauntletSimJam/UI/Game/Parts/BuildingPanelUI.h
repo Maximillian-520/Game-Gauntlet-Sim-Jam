@@ -4,9 +4,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
+// Custom
 #include "../../Component/BasicButton.h"
 #include "../../../Building/BaseBuilding.h"
 #include "../../../Common/Manager/MoneyManager.h"
+// ==========
 #include "BuildingPanelUI.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpgradeButtonPressed);
@@ -43,9 +45,6 @@ public:
 protected:
 	virtual void NativeOnInitialized();
 
-	const FString MaxLevelText = "Max";
-	const FString CloseText = "Close";
-
 	// ==================================================
 	//           Main
 	// ==================================================
@@ -58,6 +57,12 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBasicButton> CloseButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Main")
+	FText MaxLevelButtonText = FText::FromString("Max");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Main")
+	FText CloseButtonText = FText::FromString("Close");
 
 	// ==================================================
 	//           Upgrade
@@ -77,6 +82,18 @@ protected:
 	//           Event
 	// ==================================================
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnUpgradeButtonHoverBP(const FText& Description);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnUpgradeButtonUpdated(const FText& Description);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event")
+	void OnUpgradeButtonUnhoverBP();
+
+	UFUNCTION(BlueprintCallable, Category = "Event")
+	void HandleUpgradeButtonHovered() { OnUpgradeButtonHoverBP(UpgradeDescription); }
+
 	UFUNCTION(BlueprintCallable, Category = "Event")
 	void HandleUpgradeButtonPressed() { OnUpgradeButtonPressed.Broadcast(); }
 
@@ -91,4 +108,5 @@ private:
 	ABaseBuilding* CurrentBuilding;
 
 	int32 UpgradeCost;
+	FText UpgradeDescription;
 };

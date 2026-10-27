@@ -58,13 +58,17 @@ FText ATrainController::GetFormatedDistanceText(float Distance)
 
 void ATrainController::CheckTrainPassQueue()
 {
-	if (CurrentTrainPassing) return;
-	if (TrainPassQueue.Num() <= 0) return;
+	if (CurrentTrainPassing) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Nope"));
+		return;
+	}
+	if (TrainPassQueue.IsEmpty()) return;
 
 	CurrentTrainPassing = TrainPassQueue[0];
 	TrainPassQueue.RemoveAt(0);
 
-	CurrentTrainPassing->AllowPassThrough();
+	CurrentTrainPassing->PassThrough();
 }
 
 // ==================================================

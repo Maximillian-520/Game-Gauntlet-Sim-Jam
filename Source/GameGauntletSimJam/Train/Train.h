@@ -37,20 +37,15 @@ public:
 	UBoxComponent* HitBox;
 
 	// ==================================================
-	//           Main
+	//           Train
 	// ==================================================
 
 	/** How close (in cm) is "close enough" to consider the point reached. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Train|Main")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Train")
 	float AcceptanceRadius = 10.f;
 
-	UFUNCTION(BlueprintCallable, Category = "Train|Main")
+	UFUNCTION(BlueprintCallable, Category = "Train")
 	void SetPassTargetLocation(FVector TargetLocation) { PassTargetLocation = TargetLocation; }
-
-	UPROPERTY(BlueprintAssignable, Category = "Train|Main")
-	FOnTrainHitCustomer OnTrainHitCustomer;
-	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Main")
-	void OnTrainHitCustomerBP();
 
 	// ==================================================
 	//           Travel
@@ -69,7 +64,8 @@ public:
 	/* In Kilometers per hour */
 	int32 TrainSpeed = 100;
 
-	void OverrideTravelDuration(float NewTravelDuration);
+	UFUNCTION(BlueprintCallable, Category = "Train|Travel")
+	void Travel();
 
 	UFUNCTION(BlueprintCallable, Category = "Train|Travel")
 	/* In Kilometers */
@@ -80,15 +76,22 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Train|Travel")
 	FOnTrainArrived OnTrainArrived;
-	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Travel")
-	void OnTrainArrivedBP();
 
 	// ==================================================
 	//           Passing
 	// ==================================================
 
 	UFUNCTION(BlueprintCallable, Category = "Train|Passing")
-	void AllowPassThrough() { PassThrough(); }
+	void PassThrough();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Passing")
+	void OnTrainPassingBP();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Train|Passing")
+	void OnTrainHitCustomerBP();
+
+	UPROPERTY(BlueprintAssignable, Category = "Train|Passing")
+	FOnTrainHitCustomer OnTrainHitCustomer;
 
 	// ==================================================
 	//           Naming
@@ -115,15 +118,11 @@ protected:
 	//           Travel
 	// ==================================================
 
-	void Travel();
-
 	void UpdateTrainTraveling(float DeltaTime);
 
 	// ==================================================
 	//           Passing
 	// ==================================================
-
-	void PassThrough();
 
 	void UpdateTrainPassing(float DeltaTime);
 
@@ -144,7 +143,6 @@ protected:
 private:
 	// Traveling
 	bool bIsTraveling = false;
-	bool bTravelTimerAlreadySet = false;
 	float TravelTimer;
 	float TravelUpdateTimer;
 

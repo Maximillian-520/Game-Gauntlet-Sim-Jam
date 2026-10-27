@@ -44,17 +44,28 @@ void AProgressionController::UpdateDifficulty()
 	// Update Train Spawn Interval
 	if (TrainSpawnIntervalCurve)
 	{
-		float TrainSpawnInterval = TrainSpawnIntervalCurve->GetFloatValue(ElapsedGameTimer);
-		if (TrainManager) TrainSpawnInterval += TrainManager->GetSpawnIntervalIncrease();
+		FVector Value = TrainSpawnIntervalCurve->GetVectorValue(ElapsedGameTimer);
+		float TrainMinSpawnInterval = Value.X;
+		float TrainMaxSpawnInterval = Value.Y;
+		if (TrainManager)
+		{
+			TrainMinSpawnInterval += TrainManager->GetSpawnIntervalIncrease();
+			TrainMaxSpawnInterval += TrainManager->GetSpawnIntervalIncrease();
+		}
 
-		TrainSpawner->MinSpawnInterval = TrainSpawnInterval;
-		TrainSpawner->MaxSpawnInterval = TrainSpawnInterval;
+		TrainSpawner->MinSpawnInterval = TrainMinSpawnInterval;
+		TrainSpawner->MaxSpawnInterval = TrainMaxSpawnInterval;
 	}
 
 	// Update Train Travel Duration
 	if (TrainTravelDurationCurve)
 	{
-		TrainSpawner->OverrideTravelDurationValue = TrainTravelDurationCurve->GetFloatValue(ElapsedGameTimer);
+		FVector Value = TrainTravelDurationCurve->GetVectorValue(ElapsedGameTimer);
+		float TrainMinTravelDurationValue = Value.X;
+		float TrainMaxTravelDurationValue = Value.Y;
+
+		TrainSpawner->OverrideMinTravelDurationValue = TrainMinTravelDurationValue;
+		TrainSpawner->OverrideMaxTravelDurationValue = TrainMaxTravelDurationValue;
 	}
 }
 
