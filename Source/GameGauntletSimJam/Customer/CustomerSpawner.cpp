@@ -49,9 +49,11 @@ void ACustomerSpawner::SpawnCustomer()
     if (!CustomerBlueprint) return;
 
     // --- Spawn customer ---
+
     if (UWorld* World = GetWorld())
     {
         // --- Pick a random spawn area and a random location to spawn ---
+
         FVector SpawnLocation = GetActorLocation();
         FRotator SpawnRotation = GetActorRotation();
         int32 SpawnAreaIndex = INDEX_NONE;
@@ -73,6 +75,7 @@ void ACustomerSpawner::SpawnCustomer()
         FRotator ExitRotation = GetActorRotation();
 
         // --- Pick a random exit from any other spawn area ---
+
         TArray<UBoxComponent*> ExitCandidates;
 
         for (int32 i = 0; i < SpawnAreas.Num(); ++i)
@@ -97,6 +100,7 @@ void ACustomerSpawner::SpawnCustomer()
         }
 
         // --- Spawn and set new instance ---
+
         FActorSpawnParameters SpawnParams;
         SpawnParams.Owner = this;
         SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -105,7 +109,24 @@ void ACustomerSpawner::SpawnCustomer()
 
         if (CustomerInstance)
         {
+            // Set parent
+            if (CustomerInstanceParent)
+            {
+                CustomerInstance->AttachToActor(
+                    CustomerInstanceParent,
+                    FAttachmentTransformRules::KeepWorldTransform
+                );
+            }
+            // Set exit
             CustomerInstance->SetExit(ExitActor, ExitLocation, ExitRotation);
+            // Set interested and purchase chance
+            CustomerInstance->InterestedChance = FMath::Min(
+                1.0f, CustomerInstance->InterestedChance + InterestedChanceIncreaseModifier
+            );
+            CustomerInstance->PurchaseChance = FMath::Min(
+                1.0f, CustomerInstance->PurchaseChance + PurchaseChanceIncreaseModifier
+            );
+            // Broadcast event
             OnCustomerSpawned.Broadcast(CustomerInstance);
         }
     }

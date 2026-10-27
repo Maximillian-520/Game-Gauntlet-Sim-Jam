@@ -12,6 +12,6 @@ void AGameInitialize::BeginPlay()
 	UCustomerManager* CustomerManager = GetGameInstance()->GetSubsystem<UCustomerManager>();
 	if (CustomerManager) CustomerManager->Reset(BaseSpawnInterval);
 
-	UTrackerManager* TrackerManager = GetGameInstance()->GetSubsystem<UTrackerManager>();
-	if (TrackerManager) TrackerManager->Reset(BaseTrackInterval);
+	UTrainManager* TrainManager = GetGameInstance()->GetSubsystem<UTrainManager>();
+	if (TrainManager) TrainManager->Reset(BaseTrackInterval);
 }

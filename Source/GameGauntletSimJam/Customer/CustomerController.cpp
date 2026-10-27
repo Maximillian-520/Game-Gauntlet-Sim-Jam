@@ -16,7 +16,11 @@ void ACustomerController::BeginPlay()
 	if (!MoneyManager) return;
 
 	CustomerSpawner->OnCustomerSpawned.AddDynamic(this, &ACustomerController::HandleCustomerSpawned);
-	if (CustomerManager) CustomerManager->OnSpawnIntervalChanged.AddDynamic(this, &ACustomerController::HandleSpawnIntervalChanged);
+	if (CustomerManager)
+	{
+		CustomerManager->OnSpawnIntervalChanged.AddDynamic(this, &ACustomerController::HandleSpawnIntervalChanged);
+		CustomerManager->OnInterestedChanceChanged.AddDynamic(this, &ACustomerController::HandleInterestedChanceChanged);
+	}
 
 	UpdateSpawnInterval();
 }
@@ -89,5 +93,13 @@ void ACustomerController::HandlePurchasedFromShop(int32 MoneySpent)
 void ACustomerController::HandleCustomerDestroyed(AActor* DestroyedActor)
 {
 	Customers.Remove(Cast<ACustomer>(DestroyedActor));
+}
+
+void ACustomerController::HandleInterestedChanceChanged()
+{
+	if (CustomerSpawner && CustomerManager)
+	{
+		CustomerSpawner->InterestedChanceIncreaseModifier = CustomerManager->GetInterestedChanceIncrease();
+	}
 }
 

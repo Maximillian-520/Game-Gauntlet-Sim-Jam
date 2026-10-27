@@ -2,9 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Common/Manager/GameManager.h"
-#include "../Common/Manager/TrackerManager.h"
+// Custom
 #include "TrainSpawner.h"
+#include "../Common/Manager/GameManager.h"
+#include "../Common/Manager/TrainManager.h"
+// ==========
 #include "TrainController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
@@ -34,7 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
 	int32 MaxTrainCount = 1;
 
-	UFUNCTION(BlueprintCallable, Category = "Event")
+	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void UpdateTrainTrackInterval();
 
 	UPROPERTY(BlueprintAssignable)
@@ -92,7 +94,7 @@ private:
 	UPROPERTY()
 	UGameManager* GameManager = nullptr;
 	UPROPERTY()
-	UTrackerManager* TrackerManager = nullptr;
+	UTrainManager* TrainManager = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Controller")
 	int32 TrainCount = 0;

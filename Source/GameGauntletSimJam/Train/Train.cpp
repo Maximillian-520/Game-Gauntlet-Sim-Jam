@@ -40,55 +40,13 @@ void ATrain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// --- Traveling ---
-	if (bIsTraveling)
-	{
-		TravelTimer -= DeltaTime;
-		if (TravelTimer <= 0)
-		{
-			OnTrainArrived.Broadcast(this);
-			OnTrainArrivedBP();
-		}
+	if (bIsTraveling) UpdateTrainTraveling(DeltaTime);
 
-		TravelUpdateTimer -= DeltaTime;
-		if (TravelUpdateTimer <= 0)
-		{
-			OnTrainTravelUpdate.Broadcast(this);
-			TravelUpdateTimer = TravelUpdateInterval;
-		}
-	}
-
-	// --- Passing ---
-	if (LinearMovementComponent && bIsPassing)
-	{
-		const FVector ToTarget = PassTargetLocation - GetActorLocation();
-		const float DistanceToTarget = ToTarget.Size();
-
-		LinearMovementComponent->SetDirection(ToTarget);
-		LinearMovementComponent->Forward();
-
-		// Close enough to reach the target this frame (also prevents overshooting)
-		if (DistanceToTarget <= AcceptanceRadius)
-		{
-			HandlePointReached();
-			return;
-		}
-	}
-
+	if (LinearMovementComponent && bIsPassing) UpdateTrainPassing(DeltaTime);
 }
 
 // ==================================================
 //           Travel
-// ==================================================
-
-void ATrain::OverrideTravelDuration(float NewTravelDuration)
-{
-	TravelTimer = NewTravelDuration;
-	bTravelTimerAlreadySet = true;
-}
-
-// ==================================================
-//           Main
 // ==================================================
 
 void ATrain::Travel()
@@ -100,12 +58,51 @@ void ATrain::Travel()
 	SetActorHiddenInGame(true);
 }
 
+void ATrain::UpdateTrainTraveling(float DeltaTime)
+{
+	TravelTimer -= DeltaTime;
+	if (TravelTimer <= 0)
+	{
+		OnTrainArrived.Broadcast(this);
+		OnTrainArrivedBP();
+	}
+
+	TravelUpdateTimer -= DeltaTime;
+	if (TravelUpdateTimer <= 0)
+	{
+		OnTrainTravelUpdate.Broadcast(this);
+		TravelUpdateTimer = TravelUpdateInterval;
+	}
+}
+
+void ATrain::OverrideTravelDuration(float NewTravelDuration)
+{
+	TravelTimer = NewTravelDuration;
+	bTravelTimerAlreadySet = true;
+}
+
+// ==================================================
+//           Passing
+// ==================================================
+
 void ATrain::PassThrough()
 {
 	bIsTraveling = false;
 	bIsPassing = true;
 	SetActorHiddenInGame(false);
 	LinearMovementComponent->SetVelocity(LinearMovementComponent->MoveSpeed);
+}
+
+void ATrain::UpdateTrainPassing(float DeltaTime)
+{
+	const FVector ToTarget = PassTargetLocation - GetActorLocation();
+	const float DistanceToTarget = ToTarget.Size();
+
+	LinearMovementComponent->SetDirection(ToTarget);
+	LinearMovementComponent->Forward();
+
+	// Close enough to reach the target this frame (also prevents overshooting)
+	if (DistanceToTarget <= AcceptanceRadius) HandlePointReached();
 }
 
 void ATrain::HandlePointReached()

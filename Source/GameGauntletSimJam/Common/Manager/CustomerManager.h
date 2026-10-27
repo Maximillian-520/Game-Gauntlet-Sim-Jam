@@ -4,7 +4,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "CustomerManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpawnIntervalChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCustomerStatChanged);
 
 UCLASS()
 class GAMEGAUNTLETSIMJAM_API UCustomerManager : public UGameInstanceSubsystem
@@ -12,6 +12,10 @@ class GAMEGAUNTLETSIMJAM_API UCustomerManager : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+    // ==================================================
+    //           Spawning
+    // ==================================================
+
     const float MinimumSpawnInterval = 0.05f;
 
     UFUNCTION(BlueprintCallable, Category = "Spawning")
@@ -24,9 +28,26 @@ public:
     void AddSpawnIntervalReduction(float Reduction);
 
     UPROPERTY(BlueprintAssignable, Category = "Spawning")
-    FOnSpawnIntervalChanged OnSpawnIntervalChanged;
+    FOnCustomerStatChanged OnSpawnIntervalChanged;
+
+    // ==================================================
+    //           Interested
+    // ==================================================
+
+    UFUNCTION(BlueprintCallable, Category = "Interested")
+    void AddInterestedChanceIncrease(float Increase);
+
+    UFUNCTION(BlueprintCallable, Category = "Interested")
+    float GetInterestedChanceIncrease() const { return InterestedChanceIncrease; }
+
+    UPROPERTY(BlueprintAssignable, Category = "Spawning")
+    FOnCustomerStatChanged OnInterestedChanceChanged;
 
 private:
+    // Spawning
     float BaseSpawnInterval = 3.0f;
     float SpawnIntervalReduction = 0.0f;
+
+    // Interested
+    float InterestedChanceIncrease = 0.0f;
 };

@@ -5,6 +5,7 @@
 // Custom
 #include "../Train/TrainController.h"
 #include "../Train/TrainSpawner.h"
+#include "../Common/Manager/TrainManager.h"
 // ==========
 #include "ProgressionController.generated.h"
 
@@ -48,7 +49,10 @@ protected:
 
 	void UpdateDifficulty();
 
-private:	
+private:
+	UPROPERTY()
+	UTrainManager* TrainManager = nullptr;
+
 	float DifficultyUpdateTimer = 0.0;
 	float ElapsedGameTimer = 0.0;
 };

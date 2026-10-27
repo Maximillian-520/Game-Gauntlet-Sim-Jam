@@ -10,6 +10,9 @@ void AProgressionController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TrainManager = UGameInstance::GetSubsystem<UTrainManager>(GetGameInstance());
+	if (!TrainManager) UE_LOG(LogTemp, Warning, TEXT("TrainManager did not exist"));
+
 	UpdateDifficulty();
 	DifficultyUpdateTimer = DifficultyUpdateInterval;
 }
@@ -32,7 +35,6 @@ void AProgressionController::UpdateDifficulty()
 {
 	if (!TrainController || !TrainSpawner) return;
 
-
 	// Update Max Train
 	if (MaxTrainCurve)
 	{
@@ -42,8 +44,11 @@ void AProgressionController::UpdateDifficulty()
 	// Update Train Spawn Interval
 	if (TrainSpawnIntervalCurve)
 	{
-		TrainSpawner->MinSpawnInterval = TrainSpawnIntervalCurve->GetFloatValue(ElapsedGameTimer);
-		TrainSpawner->MaxSpawnInterval = TrainSpawnIntervalCurve->GetFloatValue(ElapsedGameTimer);
+		float TrainSpawnInterval = TrainSpawnIntervalCurve->GetFloatValue(ElapsedGameTimer);
+		if (TrainManager) TrainSpawnInterval += TrainManager->GetSpawnIntervalIncrease();
+
+		TrainSpawner->MinSpawnInterval = TrainSpawnInterval;
+		TrainSpawner->MaxSpawnInterval = TrainSpawnInterval;
 	}
 
 	// Update Train Travel Duration

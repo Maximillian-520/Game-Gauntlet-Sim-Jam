@@ -9,14 +9,21 @@ void ATracker::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UpdateTrackIntervalReduction();
+	TrainManager = UGameInstance::GetSubsystem<UTrainManager>(GetGameInstance());
+	if (!TrainManager) UE_LOG(LogTemp, Warning, TEXT("TrainManager did not exist"));
+
+	if (TrainManager) TrainManager->AddTrackerBuildingCount(1);
+
+	UpdateBuildingEffect();
 }
 
 void ATracker::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
+	if (TrainManager)
 	{
-		TrackerManager->AddTrackIntervalReduction(-CalculateTrackIntervalReduction());
+		TrainManager->AddTrackerBuildingCount(-1);
+		TrainManager->AddTrackIntervalReduction(-CurrentTrackIntervalReduction);
+		TrainManager->AddSpawnIntervalIncrease(-CurrentSpawnIntervalIncrease);
 	}
 
 	Super::EndPlay(EndPlayReason);
@@ -34,20 +41,28 @@ void ATracker::Upgrade()
 
 	SetBuildingLevelMesh();
 
-	UpdateTrackIntervalReduction();
+	UpdateBuildingEffect();
 }
 
-void ATracker::UpdateTrackIntervalReduction()
+void ATracker::UpdateBuildingEffect()
 {
+	// --- Update Track Interval Reduction ---
+
 	float NewTrackIntervalReduction = CalculateTrackIntervalReduction();
 	float OffsetTrackIntervalReduction = NewTrackIntervalReduction - CurrentTrackIntervalReduction;
 
 	CurrentTrackIntervalReduction = NewTrackIntervalReduction;
 
-	if (UTrackerManager* TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance()))
-	{
-		TrackerManager->AddTrackIntervalReduction(OffsetTrackIntervalReduction);
-	}
+	if (TrainManager) TrainManager->AddTrackIntervalReduction(OffsetTrackIntervalReduction);
+	
+	// --- Update Spawn Interval Increase ---
+	
+	float NewSpawnIntervalIncrease = CalculateSpawnIntervalIncrease();
+	float OffsetSpawnIntervalIncrease = NewSpawnIntervalIncrease - CurrentSpawnIntervalIncrease;
+
+	CurrentSpawnIntervalIncrease = NewSpawnIntervalIncrease;
+
+	if (TrainManager) TrainManager->AddSpawnIntervalIncrease(OffsetSpawnIntervalIncrease);
 }
 
 float ATracker::CalculateTrackIntervalReduction() const
@@ -57,4 +72,13 @@ float ATracker::CalculateTrackIntervalReduction() const
 	int32 Index = FMath::Min(Level, TrackIntervalReductions.Num());
 
 	return TrackIntervalReductions[Index - 1];
+}
+
+float ATracker::CalculateSpawnIntervalIncrease() const
+{
+	if (SpawnIntervalIncreases.Num() <= 0) return 0;
+
+	int32 Index = FMath::Min(Level, SpawnIntervalIncreases.Num());
+
+	return SpawnIntervalIncreases[Index - 1];
 }

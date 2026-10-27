@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Controller")
 	void HandleSpawnIntervalChanged() { UpdateSpawnInterval(); }
 
+	UFUNCTION(BlueprintCallable, Category = "Controller")
+	void HandleInterestedChanceChanged();
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -11,11 +11,12 @@ void ATrainController::BeginPlay()
 	Super::BeginPlay();
 	
 	GameManager = UGameInstance::GetSubsystem<UGameManager>(GetGameInstance());
-	if (!GameManager) return;
-	TrackerManager = UGameInstance::GetSubsystem<UTrackerManager>(GetGameInstance());
-	if (!TrackerManager) return;
+	if (!GameManager) UE_LOG(LogTemp, Warning, TEXT("GameManager did not exist"));
+	TrainManager = UGameInstance::GetSubsystem<UTrainManager>(GetGameInstance());
+	if (!TrainManager) UE_LOG(LogTemp, Warning, TEXT("TrainManager did not exist"));
 
-	TrackerManager->OnTrackIntervalChanged.AddDynamic(this, &ATrainController::HandleTrackIntervalChanged);
+	if (TrainManager)
+		TrainManager->OnTrackIntervalChanged.AddDynamic(this, &ATrainController::HandleTrackIntervalChanged);
 	TrainSpawner->OnTrainSpawned.AddDynamic(this, &ATrainController::HandleTrainSpawned);
 }
 
@@ -31,11 +32,11 @@ void ATrainController::Tick(float DeltaTime)
 
 void ATrainController::UpdateTrainTrackInterval()
 {
-	if (!TrackerManager) return;
+	if (!TrainManager) return;
 
 	for (ATrain* Train : Trains)
 	{
-		Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
+		Train->TravelUpdateInterval = TrainManager->GetCalculatedTrackInterval(TrainCount);
 	}
 }
 
@@ -72,6 +73,8 @@ void ATrainController::CheckTrainPassQueue()
 
 void ATrainController::HandleTrainSpawned(ATrain* Train)
 {
+	// --- Setup train and update ---
+
 	Train->OnTrainTravelUpdate.AddDynamic(this, &ATrainController::HandleTrainTravelUpdate);
 	Train->OnTrainArrived.AddDynamic(this, &ATrainController::HandleTrainArrived);
 	Train->OnTrainHitCustomer.AddDynamic(this, &ATrainController::HandleTrainHitCustomer);
@@ -81,28 +84,39 @@ void ATrainController::HandleTrainSpawned(ATrain* Train)
 	TrainCount++;
 	UpdateTrainTrackInterval();
 	
-	if (TrackerManager) Train->TravelUpdateInterval = TrackerManager->GetCalculatedTrackInterval(TrainCount);
+	if (TrainManager) Train->TravelUpdateInterval = TrainManager->GetCalculatedTrackInterval(TrainCount);
 
 	if (TrainCount >= MaxTrainCount) TrainSpawner->StopSpawning();
 
-	FText TrainName = Train->GetTrainName();
-	BroadcastOnNotificationRequested(
-		Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
-	);
+	// --- Notify that train has spawned ---
+
+	if (TrainManager) if (TrainManager->CanTrackTrains())
+	{
+		FText TrainName = Train->GetTrainName();
+		BroadcastOnNotificationRequested(
+			Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
+		);
+	}
 }
 
 void ATrainController::HandleTrainTravelUpdate(ATrain* Train)
 {
-	FText TrainName = Train->GetTrainName();
-	BroadcastOnNotificationRequested(
-		Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
-	);
+	if (TrainManager) if (TrainManager->CanTrackTrains())
+	{
+		FText TrainName = Train->GetTrainName();
+		BroadcastOnNotificationRequested(
+			Train->TrainType, TrainName, GetFormatedDistanceText(Train->GetTrainRemainingDistance())
+		);
+	}
 }
 
 void ATrainController::HandleTrainArrived(ATrain* Train)
 {
-	FText TrainName = Train->GetTrainName();
-	BroadcastOnNotificationRequested(Train->TrainType, TrainName, FText::FromString("Arrived"));
+	if (TrainManager) if (TrainManager->CanTrackTrains())
+	{
+		FText TrainName = Train->GetTrainName();
+		BroadcastOnNotificationRequested(Train->TrainType, TrainName, FText::FromString("Arrived"));
+	}
 
 	TrainPassQueue.Add(Train);
 	CheckTrainPassQueue();

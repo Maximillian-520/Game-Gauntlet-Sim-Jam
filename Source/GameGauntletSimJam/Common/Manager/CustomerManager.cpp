@@ -1,5 +1,9 @@
 #include "CustomerManager.h"
 
+// ==================================================
+//           Spawning
+// ==================================================
+
 void UCustomerManager::Reset(float InitialBaseSpawnInterval)
 {
     BaseSpawnInterval = InitialBaseSpawnInterval;
@@ -15,4 +19,14 @@ void UCustomerManager::AddSpawnIntervalReduction(float Reduction)
 {
     SpawnIntervalReduction += Reduction;
     OnSpawnIntervalChanged.Broadcast();
+}
+
+// ==================================================
+//           Interested
+// ==================================================
+
+void UCustomerManager::AddInterestedChanceIncrease(float Increase)
+{
+    InterestedChanceIncrease += Increase;
+    OnInterestedChanceChanged.Broadcast();
 }

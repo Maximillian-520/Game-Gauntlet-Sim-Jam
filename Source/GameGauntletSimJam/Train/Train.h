@@ -3,8 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
-#include "../Common/Component/LinearMovementComponent.h"
+// Custom
 #include "../Customer/Customer.h"
+#include "../Common/Component/LinearMovementComponent.h"
+// ==========
 #include "Train.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrainTravelUpdate, ATrain*, Train);
@@ -82,10 +84,10 @@ public:
 	void OnTrainArrivedBP();
 
 	// ==================================================
-	//           Pass Through
+	//           Passing
 	// ==================================================
 
-	UFUNCTION(BlueprintCallable, Category = "Train|PassThrough")
+	UFUNCTION(BlueprintCallable, Category = "Train|Passing")
 	void AllowPassThrough() { PassThrough(); }
 
 	// ==================================================
@@ -106,18 +108,24 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
 	virtual void Tick(float DeltaTime) override;
 
 	// ==================================================
-	//           Main
+	//           Travel
 	// ==================================================
 
 	void Travel();
 
+	void UpdateTrainTraveling(float DeltaTime);
+
+	// ==================================================
+	//           Passing
+	// ==================================================
+
 	void PassThrough();
+
+	void UpdateTrainPassing(float DeltaTime);
 
 	void HandlePointReached();
 
@@ -134,14 +142,17 @@ protected:
 	void ClearUniqueNumber(int32 Number) const;
 
 private:
+	// Traveling
 	bool bIsTraveling = false;
 	bool bTravelTimerAlreadySet = false;
 	float TravelTimer;
 	float TravelUpdateTimer;
 
+	// Passing
 	bool bIsPassing = false;
 	FVector PassTargetLocation;
 
+	// Naming
 	static TSet<int32> UsedInstanceNumber;
 
 };
