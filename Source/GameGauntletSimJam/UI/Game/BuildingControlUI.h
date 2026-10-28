@@ -59,7 +59,7 @@ private:
 	UGameManager* GameManager = nullptr;
 
 	UFUNCTION()
-	void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+	void HandleGameUIShown() { SetVisibility(ESlateVisibility::SelfHitTestInvisible); }
 
 	UFUNCTION()
 	void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }

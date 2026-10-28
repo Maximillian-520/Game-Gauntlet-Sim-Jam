@@ -39,7 +39,7 @@ private:
     void HandleMoneyChanged(int32 NewAmount, int32 Delta);
 
     UFUNCTION()
-    void HandleGameUIShown() { SetVisibility(ESlateVisibility::Visible); }
+    void HandleGameUIShown() { SetVisibility(ESlateVisibility::SelfHitTestInvisible); }
 
     UFUNCTION()
     void HandleGameUIHidden() { SetVisibility(ESlateVisibility::Hidden); }
