@@ -6,6 +6,7 @@
 #include "Manager/MoneyManager.h"
 #include "Manager/CustomerManager.h"
 #include "Manager/TrainManager.h"
+#include "Manager/GameManager.h"
 // ==========
 #include "GameInitialize.generated.h"
 

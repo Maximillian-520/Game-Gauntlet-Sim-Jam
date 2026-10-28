@@ -20,11 +20,15 @@ public:
 	// ==================================================
 	//           Flow
 	// ==================================================
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game|Flow")
 	FName GameLevelName = TEXT("GameMap");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game|Flow")
 	FName MenuLevelName = TEXT("MenuMap");
+
+	UFUNCTION(BlueprintCallable, Category = "Game|Flow")
+	void StartGame();
 	
 	UFUNCTION(BlueprintCallable, Category = "Game|Flow")
 	void LoseGame();
@@ -34,6 +38,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Game|Flow")
 	void QuitGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Game|Pausing")
+	bool IsGameRunning() const { return bIsGameRunning; }
 
 	UFUNCTION(BlueprintCallable, Category = "Game|Pausing")
 	bool IsGameLost() const { return bIsGameLost; }
@@ -50,6 +57,7 @@ public:
 	// ==================================================
 	//           Pausing
 	// ==================================================
+
 	UFUNCTION(BlueprintCallable, Category = "Game|Pausing")
 	void ResumeGame();
 
@@ -66,6 +74,7 @@ public:
 	FOnGamePaused OnGamePaused;
 
 private:
+	bool bIsGameRunning = false;
 	bool bIsGamePaused = false;
 	bool bIsGameLost = false;
 };

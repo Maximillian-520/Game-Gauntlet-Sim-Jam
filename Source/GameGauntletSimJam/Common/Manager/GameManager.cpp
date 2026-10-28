@@ -1,5 +1,10 @@
 #include "GameManager.h"
 
+void UGameManager::StartGame()
+{
+	bIsGameRunning = true;
+}
+
 void UGameManager::LoseGame()
 {
 	UGameplayStatics::SetGamePaused(this, true);
@@ -23,6 +28,8 @@ void UGameManager::RestartGame()
 
 void UGameManager::QuitGame()
 {
+	bIsGameRunning = false;
+
 	UGameplayStatics::SetGamePaused(this, false);
 	bIsGamePaused = false;
 

@@ -14,4 +14,7 @@ void AGameInitialize::BeginPlay()
 
 	UTrainManager* TrainManager = GetGameInstance()->GetSubsystem<UTrainManager>();
 	if (TrainManager) TrainManager->Reset(BaseTrackInterval);
+
+	UGameManager* GameManager = GetGameInstance()->GetSubsystem<UGameManager>();
+	if (GameManager) GameManager->StartGame();
 }
