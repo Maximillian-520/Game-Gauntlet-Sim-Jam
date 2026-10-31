@@ -98,3 +98,11 @@ void USettingsManager::ApplyClassVolume(USoundMix* Mix, USoundClass* SoundClass,
 
 	SoundClass->Properties.Volume = Volume;
 }
+
+void USettingsManager::SetupScalability()
+{
+	// Hard set scalability level to Medium (1)
+	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
+	Settings->SetOverallScalabilityLevel(1); // Medium
+	Settings->ApplySettings(false);
+}

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "GameFramework/GameUserSettings.h"
 #include "AudioDevice.h"
 #include "Engine/Engine.h"
 #include "Misc/ConfigCacheIni.h"
@@ -73,9 +74,11 @@ protected:
 	TSoftObjectPtr<USoundClass> SfxSoundClass;
 
 private:
+	float MusicVolume = DefaultMusicVolume;
+	float SfxVolume = DefaultSfxVolume;
+	
 	void ApplyAudio() const;
 	void ApplyClassVolume(USoundMix* Mix, USoundClass* SoundClass, float Volume) const;
 
-	float MusicVolume = DefaultMusicVolume;
-	float SfxVolume = DefaultSfxVolume;
+	void SetupScalability();
 };
