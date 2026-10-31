@@ -10,10 +10,11 @@ void UMenuUI::NativeConstruct()
 	TutorialButton->OnButtonClicked.AddDynamic(this, &UMenuUI::Tutorial);
 	SettingsButton->OnButtonClicked.AddDynamic(this, &UMenuUI::Settings);
 	QuitButton->OnButtonClicked.AddDynamic(this, &UMenuUI::Quit);
+	CreditsButton->OnButtonClicked.AddDynamic(this, &UMenuUI::Credits);
 
 	TutorialCloseButton->OnButtonClicked.AddDynamic(this, &UMenuUI::HandleTutorialCloseClicked);
-
 	SettingsUI->OnCloseRequested.AddDynamic(this, &UMenuUI::HandleSettingsCloseRequested);
+	CreditsCloseButton->OnButtonClicked.AddDynamic(this, &UMenuUI::HandleCreditsCloseClicked);
 
 	// --- Initialize ---
 	
@@ -21,12 +22,15 @@ void UMenuUI::NativeConstruct()
 	TutorialButton->SetButtonText(TutorialButtonText);
 	SettingsButton->SetButtonText(SettingsButtonText);
 	QuitButton->SetButtonText(QuitButtonText);
+	CreditsButton->SetButtonText(CreditsButtonText);
 
 	TutorialCloseButton->SetButtonText(TutorialCloseButtonText);
+	CreditsCloseButton->SetButtonText(CreditsCloseButtonText);
 
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
 	TutorialPanel->SetVisibility(ESlateVisibility::Collapsed);
 	SettingsUI->SetVisibility(ESlateVisibility::Collapsed);
+	CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMenuUI::Start()
@@ -52,6 +56,13 @@ void UMenuUI::Quit()
 	UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 }
 
+void UMenuUI::Credits()
+{
+	MainPanel->SetVisibility(ESlateVisibility::Collapsed);
+	CreditsButton->SetVisibility(ESlateVisibility::Collapsed);
+	CreditsPanel->SetVisibility(ESlateVisibility::Visible);
+}
+
 void UMenuUI::HandleTutorialCloseClicked()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
@@ -62,4 +73,11 @@ void UMenuUI::HandleSettingsCloseRequested()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
 	SettingsUI->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMenuUI::HandleCreditsCloseClicked()
+{
+	MainPanel->SetVisibility(ESlateVisibility::Visible);
+	CreditsButton->SetVisibility(ESlateVisibility::Visible);
+	CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
 }

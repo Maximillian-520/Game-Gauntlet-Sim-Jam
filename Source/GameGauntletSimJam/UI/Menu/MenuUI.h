@@ -44,6 +44,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBasicButton* QuitButton;
 
+	UPROPERTY(meta = (BindWidget))
+	UBasicButton* CreditsButton;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Main")
 	FText StartButtonText = FText::FromString("Start");
 
@@ -55,6 +58,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Main")
 	FText QuitButtonText = FText::FromString("Quit");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Main")
+	FText CreditsButtonText = FText::FromString("Credits");
 
 	// ==================================================
 	//           Tutorial
@@ -76,6 +82,19 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	USettingsUI* SettingsUI;
 
+	// ==================================================
+	//           Credits
+	// ==================================================
+
+	UPROPERTY(meta = (BindWidget))
+	UPanelWidget* CreditsPanel;
+
+	UPROPERTY(meta = (BindWidget))
+	UBasicButton* CreditsCloseButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI|Credits")
+	FText CreditsCloseButtonText = FText::FromString("Close");
+
 private:
 	UFUNCTION()
 	void Start();
@@ -90,8 +109,14 @@ private:
 	void Quit();
 
 	UFUNCTION()
+	void Credits();
+
+	UFUNCTION()
 	void HandleTutorialCloseClicked();
 
 	UFUNCTION()
 	void HandleSettingsCloseRequested();
+
+	UFUNCTION()
+	void HandleCreditsCloseClicked();
 };
