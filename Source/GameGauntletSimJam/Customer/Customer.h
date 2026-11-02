@@ -79,4 +79,5 @@ protected:
 
 private:
 	bool bIsActive = true;
+	bool bIsMakingWay = false;
 };

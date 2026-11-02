@@ -28,6 +28,7 @@ void ACustomer::Tick(float DeltaTime)
 
 void ACustomer::StrollAround()
 {
+	bIsMakingWay = false;
 	CustomerBehaviorComponent->ChangeState(EBehaviorState::Strolling);
 }
 
@@ -44,6 +45,7 @@ void ACustomer::SeeBuilding(ABaseBuilding* Building)
 
 void ACustomer::MakeWay(AActor* MakeWayActor, const FVector& MakeWayLocation, const FRotator& MakeWayRotation)
 {
+	bIsMakingWay = true;
 	CustomerBehaviorComponent->DoMakeWay(MakeWayActor, MakeWayLocation, MakeWayRotation);
 }
 
@@ -60,6 +62,8 @@ void ACustomer::HandleCustomerExited()
 
 void ACustomer::HandleShoppingFinished(AShop* Shop)
 {
+	if (bIsMakingWay) return;
+
 	if (FMath::FRand() < PurchaseChance)
 	{
 		OnPurchasedFromShop.Broadcast(Shop->GetItemCost());

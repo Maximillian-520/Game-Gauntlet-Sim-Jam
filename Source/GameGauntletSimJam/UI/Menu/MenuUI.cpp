@@ -59,7 +59,6 @@ void UMenuUI::Quit()
 void UMenuUI::Credits()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Collapsed);
-	CreditsButton->SetVisibility(ESlateVisibility::Collapsed);
 	CreditsPanel->SetVisibility(ESlateVisibility::Visible);
 }
 
@@ -78,6 +77,5 @@ void UMenuUI::HandleSettingsCloseRequested()
 void UMenuUI::HandleCreditsCloseClicked()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
-	CreditsButton->SetVisibility(ESlateVisibility::Visible);
 	CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
