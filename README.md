@@ -2,7 +2,7 @@
 
 ## Overview 🌐
 
-<p align="justify">A game where you manage a market above railway tracks. The game is a mix of city building and management where you build shops and other buildings while preventing any customer from being hit by incoming trains.</p>
+<p align="justify">A management simulator game where you manage a market above railway tracks. The game is a mix of city building and management where you build shops and other buildings while preventing any customer from being hit by incoming trains.</p>
 
 <table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
     <tr>
